@@ -17,8 +17,8 @@
 
             <ImageView
                 android:id="@+id/iv_header"
-                android:layout_width="413dp"
-                android:layout_height="329dp"
+                android:layout_width="440dp"
+                android:layout_height="355dp"
                 android:background="@color/bgColor"
                 android:src="@drawable/header_image"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -51,7 +51,7 @@
 
             <TextView
                 android:id="@+id/tv_title"
-                android:layout_width="match_parent"
+                android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="18dp"
                 android:layout_marginTop="10dp"
@@ -60,11 +60,12 @@
                 android:textColor="@color/whiteColor"
                 android:textSize="40sp"
                 android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_age" />
 
             <TextView
                 android:id="@+id/tv_genre"
-                android:layout_width="match_parent"
+                android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="18dp"
                 android:layout_marginTop="5dp"
@@ -72,6 +73,7 @@
                 android:text="@string/genre"
                 android:textColor="@color/redOne"
                 android:textSize="14sp"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_title" />
 
             <ImageView
@@ -142,6 +144,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="18dp"
                 android:layout_marginTop="25dp"
+                android:layout_marginEnd="18dp"
                 android:text="@string/storyline"
                 android:textColor="@color/whiteColor"
                 android:textSize="14sp"
@@ -154,6 +157,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="18dp"
                 android:layout_marginTop="15dp"
+                android:layout_marginEnd="18dp"
                 android:lineSpacingExtra="3dp"
                 android:text="@string/storyline_description"
                 android:textColor="@color/backTextColor"
@@ -166,6 +170,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="18dp"
                 android:layout_marginTop="25dp"
+                android:layout_marginEnd="18dp"
                 android:text="@string/cast"
                 android:textColor="@color/whiteColor"
                 android:textSize="14sp"
@@ -176,9 +181,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="18dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginBottom="20dp"
-                android:orientation="horizontal"
+                android:layout_marginEnd="18dp"
+                android:paddingBottom="20dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_cast">
 
@@ -186,8 +190,10 @@
                     android:id="@+id/layout_ironman"
                     android:layout_width="80dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:orientation="vertical"
+                    app:layout_constraintEnd_toStartOf="@+id/layout_cap"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintHorizontal_chainStyle="spread_inside"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
@@ -196,10 +202,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:src="@drawable/ic_ironman"
-                        app:layout_constraintEnd_toStartOf="@id/iv_cap"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        android:src="@drawable/ic_ironman" />
 
                     <TextView
                         android:id="@+id/tv_ironman"
@@ -208,20 +211,17 @@
                         android:layout_marginTop="5dp"
                         android:text="@string/ironman"
                         android:textColor="@color/whiteColor"
-                        android:textStyle="bold"
-                        app:layout_constraintEnd_toStartOf="@id/tv_cap"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/iv_ironman" />
+                        android:textStyle="bold" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/layout_cap"
                     android:layout_width="80dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:orientation="vertical"
-                    app:layout_constraintEnd_toStartOf="@id/layout_hulk"
-                    app:layout_constraintStart_toEndOf="@id/layout_ironman"
+                    app:layout_constraintEnd_toStartOf="@+id/layout_hulk"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/layout_ironman"
                     app:layout_constraintTop_toTopOf="parent">
 
                     <ImageView
@@ -229,10 +229,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:src="@drawable/ic_cap"
-                        app:layout_constraintEnd_toStartOf="@id/iv_hulk"
-                        app:layout_constraintStart_toEndOf="@id/iv_ironman"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        android:src="@drawable/ic_cap" />
 
                     <TextView
                         android:id="@+id/tv_cap"
@@ -241,21 +238,19 @@
                         android:layout_marginTop="5dp"
                         android:text="@string/cap"
                         android:textColor="@color/whiteColor"
-                        android:textStyle="bold"
-                        app:layout_constraintEnd_toStartOf="@id/tv_hulk"
-                        app:layout_constraintStart_toStartOf="@id/iv_cap"
-                        app:layout_constraintTop_toBottomOf="@id/iv_ironman" />
+                        android:textStyle="bold" />
 
                 </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/layout_hulk"
-                    android:layout_width="wrap_content"
+                    android:layout_width="80dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:orientation="vertical"
-                    app:layout_constraintEnd_toStartOf="@id/layout_thor"
-                    app:layout_constraintStart_toEndOf="@id/layout_cap"
+                    app:layout_constraintEnd_toStartOf="@+id/layout_thor"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/layout_cap"
                     app:layout_constraintTop_toTopOf="parent">
 
                     <ImageView
@@ -263,22 +258,16 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:src="@drawable/ic_hulk"
-                        app:layout_constraintEnd_toStartOf="@id/iv_thor"
-                        app:layout_constraintStart_toEndOf="@id/iv_cap"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        android:src="@drawable/ic_hulk" />
 
                     <TextView
                         android:id="@+id/tv_hulk"
-                        android:layout_width="80dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
                         android:text="@string/hulk"
                         android:textColor="@color/whiteColor"
-                        android:textStyle="bold"
-                        app:layout_constraintEnd_toStartOf="@id/tv_thor"
-                        app:layout_constraintStart_toStartOf="@id/iv_hulk"
-                        app:layout_constraintTop_toBottomOf="@id/iv_ironman" />
+                        android:textStyle="bold" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -288,6 +277,8 @@
                     android:layout_weight="1"
                     android:orientation="vertical"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/layout_hulk"
                     app:layout_constraintTop_toTopOf="parent">
 
                     <ImageView
@@ -295,10 +286,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:src="@drawable/ic_thor"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@id/iv_hulk"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        android:src="@drawable/ic_thor" />
 
                     <TextView
                         android:id="@+id/tv_thor"
@@ -307,10 +295,7 @@
                         android:layout_marginTop="5dp"
                         android:text="@string/thor"
                         android:textColor="@color/whiteColor"
-                        android:textStyle="bold"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="@id/iv_thor"
-                        app:layout_constraintTop_toBottomOf="@id/iv_ironman" />
+                        android:textStyle="bold" />
                 </LinearLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
