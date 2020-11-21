@@ -17,14 +17,14 @@
 
             <ImageView
                 android:id="@+id/iv_header"
-                android:layout_width="745dp"
-                android:layout_height="686dp"
+                android:layout_width="1196dp"
+                android:layout_height="620dp"
                 android:background="@color/bgColor"
                 android:src="@drawable/header_image"
-                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                tools:layout_editor_absoluteX="-11dp" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:layout_editor_absoluteX="-250dp" />
 
             <ImageView
                 android:id="@+id/iv_back_arrow"
@@ -154,6 +154,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="18dp"
+                android:layout_marginEnd="18dp"
                 android:layout_marginTop="15dp"
                 android:lineSpacingExtra="3dp"
                 android:text="@string/storyline_description"
