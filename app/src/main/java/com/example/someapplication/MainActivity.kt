@@ -1,20 +1,26 @@
 package com.example.someapplication
 
-import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Button
+import androidx.appcompat.app.AppCompatActivity
 
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val startDetailsActivityButton = findViewById<Button>(R.id.start_deatails_activity)
 
-        startDetailsActivityButton.setOnClickListener {
-            val intent = Intent(this, MovieDetailsActivity::class.java)
-            startActivity(intent)
+        supportFragmentManager.beginTransaction()
+            .add(R.id.fragment_container, FragmentMoviesList())
+            .addToBackStack(null)
+            .commit()
+    }
+
+    override fun onBackPressed() {
+        if (supportFragmentManager.backStackEntryCount > 0) {
+            supportFragmentManager.popBackStack()
+        } else {
+            super.onBackPressed()
         }
     }
+
 }

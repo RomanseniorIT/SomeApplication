@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_horizontal_card"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.8" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_vertical_card"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.2" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/movie_item"
+        android:layout_width="@dimen/dimen_0dp"
+        android:layout_height="@dimen/dimen_0dp"
+        app:cardCornerRadius="@dimen/dimen_10dp"
+        app:layout_constraintBottom_toTopOf="@id/guideline_horizontal_card"
+        app:layout_constraintEnd_toStartOf="@id/guideline_vertical_card"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_movie_card">
+
+            <ImageView
+                android:id="@+id/iv_poster_card"
+                android:layout_width="@dimen/dimen_0dp"
+                android:layout_height="@dimen/dimen_0dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_card_background"
+                app:layout_constraintBottom_toBottomOf="@id/guideline_horizontal_image"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline_horizontal_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.85" />
+
+            <TextView
+                android:id="@+id/tv_age_card"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_5dp"
+                android:layout_marginTop="@dimen/margin_10dp"
+                android:background="@drawable/bg_age"
+                android:gravity="center"
+                android:padding="@dimen/padding_3dp"
+                android:text="@string/age"
+                android:textColor="@color/whiteColor"
+                android:textSize="@dimen/text_size_10sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/iv_like_card"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_10dp"
+                android:layout_marginEnd="@dimen/margin_5dp"
+                android:src="@drawable/ic_like"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_genre"
+                android:layout_width="@dimen/dimen_0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_5dp"
+                android:layout_marginBottom="@dimen/margin_3dp"
+                android:text="@string/genre_card"
+                android:textColor="@color/redOne"
+                android:textSize="@dimen/text_size_6sp"
+                app:layout_constraintBottom_toTopOf="@id/iv_star_one_card"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <ImageView
+                android:id="@+id/iv_star_one_card"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_5dp"
+                android:layout_marginBottom="@dimen/margin_8dp"
+                android:src="@drawable/ic_red_star_card"
+                app:layout_constraintBottom_toTopOf="@id/guideline_horizontal_image"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <ImageView
+                android:id="@+id/iv_star_two_card"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_1dp"
+                android:layout_marginBottom="@dimen/margin_8dp"
+                android:src="@drawable/ic_red_star_card"
+                app:layout_constraintBottom_toTopOf="@id/guideline_horizontal_image"
+                app:layout_constraintStart_toEndOf="@id/iv_star_one_card" />
+
+            <ImageView
+                android:id="@+id/iv_star_three_card"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_1dp"
+                android:layout_marginBottom="@dimen/margin_8dp"
+                android:src="@drawable/ic_red_star_card"
+                app:layout_constraintBottom_toTopOf="@id/guideline_horizontal_image"
+                app:layout_constraintStart_toEndOf="@id/iv_star_two_card" />
+
+            <ImageView
+                android:id="@+id/iv_star_four_card"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_1dp"
+                android:layout_marginBottom="@dimen/margin_8dp"
+                android:src="@drawable/ic_red_star_card"
+                app:layout_constraintBottom_toTopOf="@id/guideline_horizontal_image"
+                app:layout_constraintStart_toEndOf="@id/iv_star_three_card" />
+
+            <ImageView
+                android:id="@+id/iv_star_five_card"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_1dp"
+                android:layout_marginBottom="@dimen/margin_8dp"
+                android:src="@drawable/ic_gray_star_card"
+                app:layout_constraintBottom_toTopOf="@id/guideline_horizontal_image"
+                app:layout_constraintStart_toEndOf="@id/iv_star_four_card" />
+
+            <TextView
+                android:id="@+id/tv_reviews_card"
+                android:layout_width="@dimen/dimen_0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_4dp"
+                android:layout_marginTop="@dimen/margin_6dp"
+                android:layout_marginBottom="@dimen/margin_7dp"
+                android:text="@string/reviews"
+                android:textAllCaps="true"
+                android:textColor="@color/backTextColor"
+                android:textSize="@dimen/text_size_6sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@id/guideline_horizontal_image"
+                app:layout_constraintStart_toEndOf="@id/iv_star_five_card" />
+
+            <TextView
+                android:id="@+id/tv_title_card"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_5dp"
+                android:text="@string/title"
+                android:textColor="@color/whiteColor"
+                android:textSize="@dimen/text_size_12sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/guideline_horizontal_image" />
+
+            <TextView
+                android:id="@+id/tv_time_card"
+                android:layout_width="@dimen/dimen_0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_2dp"
+                android:layout_marginBottom="@dimen/margin_7dp"
+                android:text="@string/time_card"
+                android:textAllCaps="true"
+                android:textColor="@color/backTextColor"
+                android:textSize="@dimen/text_size_6sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@id/tv_title_card"
+                app:layout_constraintTop_toBottomOf="@id/tv_title_card" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

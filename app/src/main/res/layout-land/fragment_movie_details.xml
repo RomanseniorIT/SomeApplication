@@ -20,7 +20,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                app:layout_constraintGuide_percent="0.4" />
+                app:layout_constraintGuide_percent="0.65" />
 
             <ImageView
                 android:id="@+id/iv_header"
@@ -198,7 +198,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                app:layout_constraintGuide_percent="0.94" />
+                app:layout_constraintGuide_percent="0.98" />
 
 
             <ImageView
@@ -207,7 +207,7 @@
                 android:layout_height="@dimen/dimen_0dp"
                 android:layout_marginStart="@dimen/margin_16dp"
                 android:layout_marginTop="@dimen/margin_5dp"
-                android:layout_marginEnd="@dimen/margin_5dp"
+                android:layout_marginEnd="@dimen/margin_10dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/ic_ironman"
                 app:layout_constraintBottom_toTopOf="@id/guidline_actor_details"
@@ -234,9 +234,9 @@
                 android:id="@+id/iv_cap"
                 android:layout_width="@dimen/dimen_0dp"
                 android:layout_height="@dimen/dimen_0dp"
-                android:layout_marginStart="@dimen/margin_5dp"
+                android:layout_marginStart="@dimen/margin_10dp"
                 android:layout_marginTop="@dimen/margin_5dp"
-                android:layout_marginEnd="@dimen/margin_5dp"
+                android:layout_marginEnd="@dimen/margin_10dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/ic_cap"
                 app:layout_constraintBottom_toTopOf="@id/guidline_actor_details"
@@ -262,9 +262,9 @@
                 android:id="@+id/iv_hulk"
                 android:layout_width="@dimen/dimen_0dp"
                 android:layout_height="@dimen/dimen_0dp"
-                android:layout_marginStart="@dimen/margin_5dp"
+                android:layout_marginStart="@dimen/margin_10dp"
                 android:layout_marginTop="@dimen/margin_5dp"
-                android:layout_marginEnd="@dimen/margin_5dp"
+                android:layout_marginEnd="@dimen/margin_10dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/ic_hulk"
                 app:layout_constraintBottom_toTopOf="@id/guidline_actor_details"
@@ -290,7 +290,7 @@
                 android:id="@+id/iv_thor"
                 android:layout_width="@dimen/dimen_0dp"
                 android:layout_height="@dimen/dimen_0dp"
-                android:layout_marginStart="@dimen/margin_5dp"
+                android:layout_marginStart="@dimen/margin_10dp"
                 android:layout_marginTop="@dimen/margin_5dp"
                 android:layout_marginEnd="@dimen/margin_16dp"
                 android:scaleType="centerCrop"
