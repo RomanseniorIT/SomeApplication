@@ -20,4 +20,27 @@
 
     <string name="movie_details">Movie details</string>
 
+    //Avengers
+
+    //BlackWidow
+    <string name="widow_genre">Action, Adventure, Sci-Fi</string>
+    <string name="widow_reviews">38 reviews</string>
+    <string name="widow_title">Black Widow</string>
+    <string name="widow_time">102 min</string>
+    <string name="widow_age">13+</string>
+
+    //Tenet
+    <string name="women_genre">Action, Adventure, Fantasy</string>
+    <string name="women_reviews">74 reviews</string>
+    <string name="women_title">Wonder Woman 1984</string>
+    <string name="women_time">120 min</string>
+    <string name="women_age">16+</string>
+
+    //WonderWoman
+    <string name="tenet_genre">Action, Sci-Fi, Thriller</string>
+    <string name="tenet_reviews">98 reviews</string>
+    <string name="tenet_title">Tenet</string>
+    <string name="tenet_time">97 min</string>
+    <string name="tenet_age">13+</string>
+
 </resources>
