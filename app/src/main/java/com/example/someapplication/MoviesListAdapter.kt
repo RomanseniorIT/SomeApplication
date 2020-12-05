@@ -5,51 +5,7 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 
-class MoviesListAdapter : RecyclerView.Adapter<MoviesListAdapterViewHolder>() {
-
-    val moviesList =
-        mutableListOf(
-            Movie(
-                "Avengers: End Game",
-                "Action, Adventure, Drama",
-                125,
-                4,
-                137,
-                13,
-                false,
-                R.drawable.ic_card_background
-            ),
-            Movie(
-                "Tenet",
-                "Action, Sci-Fi, Thriller",
-                98,
-                5,
-                97,
-                16,
-                false,
-                R.drawable.ic_tenet_poster
-            ),
-            Movie(
-                "Black Widow",
-                "Action, Adventure, Sci-Fi",
-                38,
-                4,
-                102,
-                13,
-                false,
-                R.drawable.ic_widow_poster
-            ),
-            Movie(
-                "Wonder Woman 1984",
-                "Action, Adventure, Fantasy",
-                74,
-                5,
-                120,
-                13,
-                false,
-                R.drawable.ic_woman_poster
-            )
-        )
+class MoviesListAdapter(val moviesList: List<Movie>) : RecyclerView.Adapter<MoviesListAdapterViewHolder>() {
 
     lateinit var callback: Callback
 
@@ -65,11 +21,12 @@ class MoviesListAdapter : RecyclerView.Adapter<MoviesListAdapterViewHolder>() {
 
     override fun onBindViewHolder(holder: MoviesListAdapterViewHolder, position: Int) {
 
+        val item = moviesList[position]
+
         holder.itemView.setOnClickListener {
-            callback.startMovieDetailsFragment()
+            callback.startMovieDetailsFragment(item.id)
         }
 
-        val item = moviesList[position]
         holder.setRate(item.rate)
         holder.genre.text = item.genre
         holder.title.text = item.title
@@ -108,7 +65,7 @@ class MoviesListAdapter : RecyclerView.Adapter<MoviesListAdapterViewHolder>() {
     }
 
     interface Callback {
-        fun startMovieDetailsFragment()
+        fun startMovieDetailsFragment(id: Int)
     }
 
 }

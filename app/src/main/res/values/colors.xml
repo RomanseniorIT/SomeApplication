@@ -9,5 +9,6 @@
     <color name="backTextColor">#6D6D80</color>
     <color name="whiteColor">#FFFFFF</color>
     <color name="redOne">#FF3466</color>
+    <color name="actorNameColor">#D8D8D8</color>
 
 </resources>
