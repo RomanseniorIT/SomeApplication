@@ -21,7 +21,8 @@ class FragmentMovieDetails : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_movie_details, container, false)
         recyclerView = view.findViewById<RecyclerView>(R.id.rv_actors)
-        val itemDecorator = HorizontalSpaceItemDecorator(25)
+        val space = getString(R.string.rv_space)
+        val itemDecorator = HorizontalSpaceItemDecorator(space)
         recyclerView.addItemDecoration(itemDecorator)
         return view
     }
@@ -34,7 +35,7 @@ class FragmentMovieDetails : Fragment() {
         }
 
         val actors = arguments?.getParcelableArrayList<Actor>(ACTOR_LIST_KEY)
-        val movieDetailsAdapter = MovieDetailsAdapter(actors)
+        val movieDetailsAdapter = actors?.let { MovieDetailsAdapter(it) }
         recyclerView.adapter = movieDetailsAdapter
         val linearLayoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)

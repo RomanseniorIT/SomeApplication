@@ -4,7 +4,7 @@ import android.graphics.Rect
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 
-class HorizontalSpaceItemDecorator(val space: Int) : RecyclerView.ItemDecoration() {
+class HorizontalSpaceItemDecorator(val space: String) : RecyclerView.ItemDecoration() {
     override fun getItemOffsets(
         outRect: Rect,
         view: View,
@@ -15,11 +15,11 @@ class HorizontalSpaceItemDecorator(val space: Int) : RecyclerView.ItemDecoration
         val lastItem = parent.adapter?.itemCount?.minus(1)
 
         when (parent.getChildAdapterPosition(view)) {
-            firstItem -> outRect.right = space
-            lastItem -> outRect.left = space
+            firstItem -> outRect.right = space.toInt()
+            lastItem -> outRect.left = space.toInt()
             else -> {
-                outRect.right = space
-                outRect.left = space
+                outRect.right = space.toInt()
+                outRect.left = space.toInt()
             }
         }
 

@@ -17,8 +17,15 @@
     <string name="hulk">Mark Ruffalo</string>
     <string name="thor">Chris Hemsworth</string>
     <string name="start_activity">Start movie details activity</string>
+    <string name="rv_space">25</string>
+
 
     <string name="movie_details">Movie details</string>
+
+    //MovieList
+    <string name="reviews_text">reviews</string>
+    <string name="min_text">min</string>
+    <string name="plus_text">+</string>
 
     //Avengers
 

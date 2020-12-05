@@ -7,183 +7,107 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 
 class MoviesListAdapterViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-    var title = itemView.findViewById<TextView>(R.id.tv_title_card)
-    var starOne = itemView.findViewById<ImageView>(R.id.iv_star_one_card)
-    var starTwo = itemView.findViewById<ImageView>(R.id.iv_star_two_card)
-    var starThree = itemView.findViewById<ImageView>(R.id.iv_star_three_card)
-    var starFour = itemView.findViewById<ImageView>(R.id.iv_star_four_card)
-    var starFive = itemView.findViewById<ImageView>(R.id.iv_star_five_card)
-    var genre = itemView.findViewById<TextView>(R.id.tv_genre)
-    var reviews = itemView.findViewById<TextView>(R.id.tv_reviews_card)
-    var poster = itemView.findViewById<ImageView>(R.id.iv_poster_card)
-    var time = itemView.findViewById<TextView>(R.id.tv_time_card)
-    var like = itemView.findViewById<ImageView>(R.id.iv_like_card)
-    var ageRate = itemView.findViewById<TextView>(R.id.tv_age_card)
+    private var title = itemView.findViewById<TextView>(R.id.tv_title_card)
+    private var starOne = itemView.findViewById<ImageView>(R.id.iv_star_one_card)
+    private var starTwo = itemView.findViewById<ImageView>(R.id.iv_star_two_card)
+    private var starThree = itemView.findViewById<ImageView>(R.id.iv_star_three_card)
+    private var starFour = itemView.findViewById<ImageView>(R.id.iv_star_four_card)
+    private var starFive = itemView.findViewById<ImageView>(R.id.iv_star_five_card)
+    private var genre = itemView.findViewById<TextView>(R.id.tv_genre)
+    private var reviews = itemView.findViewById<TextView>(R.id.tv_reviews_card)
+    private var poster = itemView.findViewById<ImageView>(R.id.iv_poster_card)
+    private var time = itemView.findViewById<TextView>(R.id.tv_time_card)
+    private var like = itemView.findViewById<ImageView>(R.id.iv_like_card)
+    private var ageRate = itemView.findViewById<TextView>(R.id.tv_age_card)
 
-    fun setRate(rate: Int) {
-        when (rate) {
-            1 -> {
-                starOne.setImageDrawable(
-                    ContextCompat.getDrawable(
-                        itemView.context,
-                        R.drawable.ic_red_star
-                    )
-                )
-                starTwo.setImageDrawable(
-                    ContextCompat.getDrawable(
-                        itemView.context,
-                        R.drawable.ic_gray_star
-                    )
-                )
-                starThree.setImageDrawable(
-                    ContextCompat.getDrawable(
-                        itemView.context,
-                        R.drawable.ic_gray_star
-                    )
-                )
-                starFour.setImageDrawable(
-                    ContextCompat.getDrawable(
-                        itemView.context,
-                        R.drawable.ic_gray_star
-                    )
-                )
-                starFive.setImageDrawable(
-                    ContextCompat.getDrawable(
-                        itemView.context,
-                        R.drawable.ic_gray_star
-                    )
-                )
-
-            }
-            2 -> {
-                starOne.setImageDrawable(
-                    ContextCompat.getDrawable(
-                        itemView.context,
-                        R.drawable.ic_red_star
-                    )
-                )
-                starTwo.setImageDrawable(
-                    ContextCompat.getDrawable(
-                        itemView.context,
-                        R.drawable.ic_red_star
-                    )
-                )
-                starThree.setImageDrawable(
-                    ContextCompat.getDrawable(
-                        itemView.context,
-                        R.drawable.ic_gray_star
-                    )
-                )
-                starFour.setImageDrawable(
-                    ContextCompat.getDrawable(
-                        itemView.context,
-                        R.drawable.ic_gray_star
-                    )
-                )
-                starFive.setImageDrawable(
-                    ContextCompat.getDrawable(
-                        itemView.context,
-                        R.drawable.ic_gray_star
-                    )
-                )
-            }
-            3 -> {
-                starOne.setImageDrawable(
-                    ContextCompat.getDrawable(
-                        itemView.context,
-                        R.drawable.ic_red_star
-                    )
-                )
-                starTwo.setImageDrawable(
-                    ContextCompat.getDrawable(
-                        itemView.context,
-                        R.drawable.ic_red_star
-                    )
-                )
-                starThree.setImageDrawable(
-                    ContextCompat.getDrawable(
-                        itemView.context,
-                        R.drawable.ic_red_star
-                    )
-                )
-                starFour.setImageDrawable(
-                    ContextCompat.getDrawable(
-                        itemView.context,
-                        R.drawable.ic_gray_star
-                    )
-                )
-                starFive.setImageDrawable(
-                    ContextCompat.getDrawable(
-                        itemView.context,
-                        R.drawable.ic_gray_star
-                    )
-                )
-            }
-            4 -> {
-                starOne.setImageDrawable(
-                    ContextCompat.getDrawable(
-                        itemView.context,
-                        R.drawable.ic_red_star
-                    )
-                )
-                starTwo.setImageDrawable(
-                    ContextCompat.getDrawable(
-                        itemView.context,
-                        R.drawable.ic_red_star
-                    )
-                )
-                starThree.setImageDrawable(
-                    ContextCompat.getDrawable(
-                        itemView.context,
-                        R.drawable.ic_red_star
-                    )
-                )
-                starFour.setImageDrawable(
-                    ContextCompat.getDrawable(
-                        itemView.context,
-                        R.drawable.ic_red_star
-                    )
-                )
-                starFive.setImageDrawable(
-                    ContextCompat.getDrawable(
-                        itemView.context,
-                        R.drawable.ic_gray_star
-                    )
-                )
-            }
-            5 -> {
-                starOne.setImageDrawable(
-                    ContextCompat.getDrawable(
-                        itemView.context,
-                        R.drawable.ic_red_star
-                    )
-                )
-                starTwo.setImageDrawable(
-                    ContextCompat.getDrawable(
-                        itemView.context,
-                        R.drawable.ic_red_star
-                    )
-                )
-                starThree.setImageDrawable(
-                    ContextCompat.getDrawable(
-                        itemView.context,
-                        R.drawable.ic_red_star
-                    )
-                )
-                starFour.setImageDrawable(
-                    ContextCompat.getDrawable(
-                        itemView.context,
-                        R.drawable.ic_red_star
-                    )
-                )
-                starFive.setImageDrawable(
-                    ContextCompat.getDrawable(
-                        itemView.context,
-                        R.drawable.ic_red_star
-                    )
-                )
-            }
-            else -> throw IllegalStateException("Illegal rating value")
+    fun onBind(item: Movie, callback: MoviesListAdapter.Callback) {
+        itemView.setOnClickListener {
+            callback.startMovieDetailsFragment(item.id)
         }
+
+        setRate(item.rate)
+        genre.text = item.genre
+        title.text = item.title
+        reviews.text = "${item.reviews} reviews"
+        time.text = "${item.duration} min"
+        ageRate.text = "+${item.ageRate}"
+        like.setOnClickListener {
+            if (!item.isLiked) {
+                like.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        itemView.context,
+                        R.drawable.ic_liked
+                    )
+                )
+                item.isLiked = true
+            } else {
+                like.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        itemView.context,
+                        R.drawable.ic_like
+                    )
+                )
+                item.isLiked = false
+            }
+        }
+        poster.setImageDrawable(
+            ContextCompat.getDrawable(
+                itemView.context,
+                item.posterImage
+            )
+        )
+    }
+
+    private fun setRate(rate: Int) {
+        if (rate >= 1) {
+            setRedStar(starOne)
+        } else {
+            setGrayStar(starOne)
+        }
+
+        if (rate >= 2) {
+            setRedStar(starTwo)
+        } else {
+            setGrayStar(starTwo)
+        }
+
+        if (rate >= 3) {
+            setRedStar(starThree)
+        } else {
+            setGrayStar(starThree)
+        }
+
+        if (rate >= 4) {
+            setRedStar(starFour)
+        } else {
+            setGrayStar(starFour)
+        }
+
+        if (rate == 5) {
+            setRedStar(starFive)
+        } else {
+            setGrayStar(starFive)
+        }
+
+        if (rate > 5)
+            throw IllegalStateException("Illegal rating value")
+    }
+
+    private fun setGrayStar(starView: ImageView) {
+        starView.setImageDrawable(
+            ContextCompat.getDrawable(
+                itemView.context,
+                R.drawable.ic_gray_star_card
+            )
+        )
+    }
+
+    private fun setRedStar(starView: ImageView) {
+        starView.setImageDrawable(
+            ContextCompat.getDrawable(
+                itemView.context,
+                R.drawable.ic_red_star_card
+            )
+        )
     }
 }
