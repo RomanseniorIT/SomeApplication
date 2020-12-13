@@ -1,8 +1,10 @@
-package com.example.someapplication
+package com.example.someapplication.ui.movies
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.someapplication.data.Movie
+import com.example.someapplication.R
 
 class MoviesListAdapter(val moviesList: List<Movie>) :
     RecyclerView.Adapter<MoviesListAdapterViewHolder>() {
@@ -28,6 +30,6 @@ class MoviesListAdapter(val moviesList: List<Movie>) :
     }
 
     interface Callback {
-        fun startMovieDetailsFragment(id: Int)
+        fun startMovieDetailsFragment(item: Movie)
     }
 }

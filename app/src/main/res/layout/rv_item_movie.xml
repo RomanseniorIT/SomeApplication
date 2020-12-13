@@ -7,8 +7,8 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/movie_item"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/dimen_170dp"
+        android:layout_height="@dimen/dimen_296dp"
         app:cardCornerRadius="@dimen/dimen_10dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -20,9 +20,8 @@
 
             <ImageView
                 android:id="@+id/iv_poster_card"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:scaleType="centerCrop"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
                 android:src="@drawable/ic_card_background"
                 app:layout_constraintBottom_toBottomOf="@id/guideline_horizontal_image"
                 app:layout_constraintEnd_toEndOf="parent"

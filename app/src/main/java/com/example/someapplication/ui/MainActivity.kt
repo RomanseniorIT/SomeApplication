@@ -1,7 +1,9 @@
-package com.example.someapplication
+package com.example.someapplication.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.example.someapplication.R
+import com.example.someapplication.ui.movies.FragmentMoviesList
 
 class MainActivity : AppCompatActivity() {
 

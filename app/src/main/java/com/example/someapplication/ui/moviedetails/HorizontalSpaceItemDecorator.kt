@@ -1,4 +1,4 @@
-package com.example.someapplication
+package com.example.someapplication.ui.moviedetails
 
 import android.graphics.Rect
 import android.view.View
