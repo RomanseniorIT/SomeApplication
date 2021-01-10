@@ -3,10 +3,11 @@ package com.example.someapplication.ui.movies
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.someapplication.data.Movie
 import com.example.someapplication.R
+import com.example.someapplication.data.model.Genre
+import com.example.someapplication.data.model.MoviePreview
 
-class MoviesListAdapter(val moviesList: List<Movie>) :
+class MoviesListAdapter(val moviesList: List<MoviePreview>, val genres: List<Genre>) :
     RecyclerView.Adapter<MoviesListAdapterViewHolder>() {
 
     lateinit var callback: Callback
@@ -22,7 +23,7 @@ class MoviesListAdapter(val moviesList: List<Movie>) :
     }
 
     override fun onBindViewHolder(holder: MoviesListAdapterViewHolder, position: Int) {
-        holder.onBind(moviesList[position], this.callback)
+        holder.onBind(moviesList[position], genres, this.callback)
     }
 
     fun initCallback(callback: Callback) {
@@ -30,6 +31,6 @@ class MoviesListAdapter(val moviesList: List<Movie>) :
     }
 
     interface Callback {
-        fun startMovieDetailsFragment(item: Movie)
+        fun startMovieDetailsFragment(item: MoviePreview)
     }
 }

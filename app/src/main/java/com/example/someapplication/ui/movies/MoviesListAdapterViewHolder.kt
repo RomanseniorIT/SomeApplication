@@ -7,8 +7,8 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.someapplication.R
-import com.example.someapplication.data.Genre
-import com.example.someapplication.data.Movie
+import com.example.someapplication.data.model.Genre
+import com.example.someapplication.data.model.MoviePreview
 
 class MoviesListAdapterViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private var title = itemView.findViewById<TextView>(R.id.tv_title_card)
@@ -24,16 +24,23 @@ class MoviesListAdapterViewHolder(itemView: View) : RecyclerView.ViewHolder(item
     private var like = itemView.findViewById<ImageView>(R.id.iv_like_card)
     private var ageRate = itemView.findViewById<TextView>(R.id.tv_age_card)
 
-    fun onBind(item: Movie, callback: MoviesListAdapter.Callback) {
+    fun onBind(item: MoviePreview, genreList: List<Genre>, callback: MoviesListAdapter.Callback) {
         itemView.setOnClickListener {
             callback.startMovieDetailsFragment(item)
         }
-        genre.text = setGenres(item.genres)
+        val genres = mutableListOf<Genre>()
+        for (i in 0 until item.genres.size) {
+            val genre = genreList.firstOrNull { it.id == item.genres[i] }
+            if (genre != null) {
+                genres.add(genre)
+            }
+        }
+        genre.text = setGenres(genres)
         setRate(item.ratings)
         title.text = item.title
         reviews.text = "${item.numberOfRatings} reviews"
-        time.text = "${item.runtime} min"
-        ageRate.text = "+${item.minimumAge}"
+//        time.text = "${item.runtime} min"
+        ageRate.text = if (item.minimumAge) "+16" else "+13"
         like.setOnClickListener {
             like.setImageDrawable(
                 ContextCompat.getDrawable(
@@ -42,7 +49,7 @@ class MoviesListAdapterViewHolder(itemView: View) : RecyclerView.ViewHolder(item
                 )
             )
         }
-        val posterUrl = item.poster
+        val posterUrl = "https://image.tmdb.org/t/p/original/${item.poster}"
         Glide.with(itemView)
             .load(posterUrl)
             .centerCrop()
@@ -103,10 +110,10 @@ class MoviesListAdapterViewHolder(itemView: View) : RecyclerView.ViewHolder(item
         )
     }
 
-    private fun setGenres(genres: List<Genre>): String{
+    private fun setGenres(genres: List<Genre>): String {
         var genresStr = ""
-        for (i in genres.indices){
-            genresStr += if (i == genres.size-1){
+        for (i in genres.indices) {
+            genresStr += if (i == genres.size - 1) {
                 genres[i].name
             } else {
                 "${genres[i].name}, "

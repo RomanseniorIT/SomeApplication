@@ -8,16 +8,17 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.someapplication.R
-import com.example.someapplication.data.Actor
-import com.example.someapplication.data.Movie
+import com.example.someapplication.data.model.Genre
+import com.example.someapplication.data.model.MoviePreview
 import com.example.someapplication.ui.moviedetails.FragmentMovieDetails
+import kotlinx.android.synthetic.main.fragment_movie_list.*
 
 class FragmentMoviesList : Fragment(), MoviesListAdapter.Callback {
 
 
-    private val moviesList = mutableListOf<Movie>()
+    private val moviesList = mutableListOf<MoviePreview>()
+    private var genreList = listOf<Genre>()
 
     private val viewModel by viewModels<MoviesListViewModel>()
 
@@ -31,28 +32,35 @@ class FragmentMoviesList : Fragment(), MoviesListAdapter.Callback {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        viewModel.getMovies(requireActivity())
-
-        viewModel.items.observe(viewLifecycleOwner, {
-            val recyclerView = view.findViewById<RecyclerView>(R.id.rv_movie_list)
-            val moviesListAdapter = MoviesListAdapter(it)
-            moviesListAdapter.initCallback(this)
-            recyclerView.adapter = moviesListAdapter
-
-            if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-                recyclerView.layoutManager = GridLayoutManager(context, 2)
-            } else {
-                recyclerView.layoutManager = GridLayoutManager(context, 4)
-            }
-        })
+        initObservers()
+        viewModel.getGenres(requireActivity())
 
     }
 
-    override fun startMovieDetailsFragment(item: Movie) {
+    private fun initObservers() {
+        viewModel.moviesLiveData.observe(viewLifecycleOwner, { movies ->
+//            val recyclerView = view.findViewById<RecyclerView>(R.id.rv_movie_list)
+            val moviesListAdapter = MoviesListAdapter(movies, genreList)
+            moviesListAdapter.initCallback(this)
+            rv_movie_list.adapter = moviesListAdapter
 
+            if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
+                rv_movie_list.layoutManager = GridLayoutManager(context, 2)
+            } else {
+                rv_movie_list.layoutManager = GridLayoutManager(context, 4)
+            }
+        })
+
+        viewModel.genresLiveData.observe(viewLifecycleOwner, {
+            genreList = it
+            viewModel.getMovies(requireActivity())
+        })
+    }
+
+    override fun startMovieDetailsFragment(item: MoviePreview) {
         fragmentManager
             ?.beginTransaction()
-            ?.replace(R.id.fragment_container, FragmentMovieDetails.newInstance(item))
+            ?.replace(R.id.fragment_container, FragmentMovieDetails.newInstance(item.id))
             ?.addToBackStack(null)
             ?.commit()
     }

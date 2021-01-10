@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.someapplication.R
-import com.example.someapplication.data.Actor
+import com.example.someapplication.data.model.Actor
 
 class MovieDetailsAdapter(val items: List<Actor>) :
     RecyclerView.Adapter<MovieDetailsAdapterViewHolder>() {
