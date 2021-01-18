@@ -1,6 +1,5 @@
 package com.example.someapplication.ui.movies
 
-import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -12,20 +11,21 @@ import kotlinx.coroutines.launch
 
 class MoviesListViewModel : ViewModel() {
     private val _moviesLiveData = MutableLiveData<List<MoviePreview>>()
-    val moviesLiveData: LiveData<List<MoviePreview>> get() = _moviesLiveData
     private val _genresLiveData = MutableLiveData<List<Genre>>()
-    val genresLiveData: LiveData<List<Genre>> get() = _genresLiveData
     private val repository = MoviesRepository()
 
-    fun getMovies(context: Context) {
+    val genresLiveData: LiveData<List<Genre>> get() = _genresLiveData
+    val moviesLiveData: LiveData<List<MoviePreview>> get() = _moviesLiveData
+
+    fun getMovies() {
         viewModelScope.launch {
-            _moviesLiveData.value = repository.loadMovies(context)
+            _moviesLiveData.value = repository.loadMovies()
         }
     }
 
-    fun getGenres(context: Context) {
+    fun getGenres() {
         viewModelScope.launch {
-            _genresLiveData.value = repository.getGenres(context)
+            _genresLiveData.value = repository.getGenres()
         }
     }
 }

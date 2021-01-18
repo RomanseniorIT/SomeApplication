@@ -33,3 +33,8 @@ data class MovieFull(
     @SerialName("genres") val genres: List<Genre>,
     @SerialName("adult") val minimumAge: Boolean
 )
+
+data class MovieWithActors(
+    val movieFull: MovieFull?,
+    val actors: List<Actor>?
+)

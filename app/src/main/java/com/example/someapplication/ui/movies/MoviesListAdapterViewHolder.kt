@@ -39,7 +39,6 @@ class MoviesListAdapterViewHolder(itemView: View) : RecyclerView.ViewHolder(item
         setRate(item.ratings)
         title.text = item.title
         reviews.text = "${item.numberOfRatings} reviews"
-//        time.text = "${item.runtime} min"
         ageRate.text = if (item.minimumAge) "+16" else "+13"
         like.setOnClickListener {
             like.setImageDrawable(

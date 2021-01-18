@@ -11,14 +11,17 @@ class NetworkModule() {
         ignoreUnknownKeys = true
         coerceInputValues = true
     }
-    private val contentType = "application/json; charset=utf-8".toMediaType()
-    private val baseUrl = "https://api.themoviedb.org/3/"
 
     fun provideApiService(): MoviesApi {
         val retrofit = Retrofit.Builder()
-            .baseUrl(baseUrl)
-            .addConverterFactory(json.asConverterFactory(contentType))
+            .baseUrl(BASE_URL)
+            .addConverterFactory(json.asConverterFactory(CONTENT_TYPE))
             .build()
         return retrofit.create(MoviesApi::class.java)
+    }
+
+    companion object {
+        private val CONTENT_TYPE = "application/json; charset=utf-8".toMediaType()
+        private const val BASE_URL = "https://api.themoviedb.org/3/"
     }
 }

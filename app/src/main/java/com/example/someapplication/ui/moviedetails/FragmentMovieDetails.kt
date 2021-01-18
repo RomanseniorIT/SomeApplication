@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -34,47 +35,52 @@ class FragmentMovieDetails : Fragment() {
         val movieId = arguments?.getInt(MOVIE_ID)
 
         initListeners()
-        initObservers(movieId)
+        initObservers()
 
-        viewModel.getActors(requireActivity(), movieId!!)
+        movieId?.let {
+            viewModel.getMovie(it)
+        }
     }
 
-    private fun initObservers(movieId: Int?) {
-        var actors: List<Actor>? = null
+    private fun initObservers() {
         viewModel.movieLiveData.observe(viewLifecycleOwner, {
-            bind(it, actors)
-        })
-
-        viewModel.actorsLiveData.observe(viewLifecycleOwner, {
-            actors = it
-            viewModel.getMovies(requireActivity(), movieId!!)
+            if (it == null) {
+                Toast.makeText(
+                    context,
+                    "Check internet connection and restart",
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else {
+                bind(it.movieFull, it.actors)
+            }
         })
     }
 
     @SuppressLint("SetTextI18n")
     fun bind(movie: MovieFull?, actors: List<Actor>?) {
-        setRate(movie!!.ratings)
-        val posterUrl = "https://image.tmdb.org/t/p/original/${movie.backdrop}"
-        Glide.with(requireActivity())
-            .load(posterUrl)
-            .placeholder(R.drawable.ic_download)
-            .centerCrop()
-            .into(iv_header)
-        tv_age.text = if (movie.minimumAge) "+16" else "+13"
-        tv_title.text = movie.title
-        tv_reviews.text = "${movie.numberOfRatings} reviews"
-        tv_storyline_description.text = movie.overview
-        tv_genre.text = setGenres(movie.genres)
+        if (movie != null) {
+            setRate(movie.ratings)
+            val posterUrl = "https://image.tmdb.org/t/p/original/${movie.backdrop}"
+            Glide.with(requireActivity())
+                .load(posterUrl)
+                .placeholder(R.drawable.ic_download)
+                .centerCrop()
+                .into(iv_header)
+            tv_age.text = if (movie.minimumAge) "+16" else "+13"
+            tv_title.text = movie.title
+            tv_reviews.text = "${movie.numberOfRatings} reviews"
+            tv_storyline_description.text = movie.overview
+            tv_genre.text = setGenres(movie.genres)
 
-        val movieDetailsAdapter = MovieDetailsAdapter(actors!!)
-        rv_actors.adapter = movieDetailsAdapter
-        val linearLayoutManager =
-            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        rv_actors.layoutManager = linearLayoutManager
-        val space = getString(R.string.rv_space)
-        val itemDecorator = HorizontalSpaceItemDecorator(space)
-        rv_actors.addItemDecoration(itemDecorator)
-
+            val movieDetailsAdapter = MovieDetailsAdapter(actors!!)
+            rv_actors.adapter = movieDetailsAdapter
+            val linearLayoutManager =
+                LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            rv_actors.layoutManager = linearLayoutManager
+            val space = getString(R.string.rv_space)
+            val itemDecorator = HorizontalSpaceItemDecorator(space)
+            rv_actors.addItemDecoration(itemDecorator)
+        }
     }
 
     private fun setGenres(genres: List<Genre>): String {

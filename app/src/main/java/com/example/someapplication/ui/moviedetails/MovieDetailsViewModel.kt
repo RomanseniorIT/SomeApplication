@@ -1,32 +1,37 @@
 package com.example.someapplication.ui.moviedetails
 
-import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.someapplication.data.BaseUseCase
 import com.example.someapplication.data.MoviesRepository
-import com.example.someapplication.data.model.Actor
-import com.example.someapplication.data.model.MovieFull
+import com.example.someapplication.data.GetMovieUseCase
+import com.example.someapplication.data.model.MovieWithActors
 import kotlinx.coroutines.launch
+import java.net.ConnectException
+import java.net.UnknownHostException
 
-class MovieDetailsViewModel: ViewModel() {
-    private val _movieLiveData = MutableLiveData<MovieFull>()
-    val movieLiveData: LiveData<MovieFull> get() = _movieLiveData
-    private val _actorsLiveData = MutableLiveData<List<Actor>>()
-    val actorsLiveData: LiveData<List<Actor>> get() = _actorsLiveData
+class MovieDetailsViewModel : ViewModel(), BaseUseCase.ResultListener<MovieWithActors> {
+    private val _movieLiveData = MutableLiveData<MovieWithActors?>()
     private val repository = MoviesRepository()
+    private val useCase = GetMovieUseCase(this, repository)
 
-    fun getMovies(context: Context, movieId: Int) {
+    val movieLiveData: LiveData<MovieWithActors?> get() = _movieLiveData
+
+    fun getMovie(movieId: Int) {
         viewModelScope.launch {
-            _movieLiveData.value = repository.getMovie(context, movieId)
+            useCase.execute(viewModelScope, movieId)
         }
     }
 
-    fun getActors(context: Context, movieId: Int) {
-        viewModelScope.launch {
-            _actorsLiveData.value = repository.getActors(context, movieId)
-        }
+    override fun onSuccess(result: MovieWithActors) {
+        _movieLiveData.value = result
     }
 
+    override fun onFailed(exception: Exception) {
+        if (exception is UnknownHostException || exception is ConnectException) {
+            _movieLiveData.value = null
+        }
+    }
 }

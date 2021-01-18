@@ -16,8 +16,6 @@ import kotlinx.android.synthetic.main.fragment_movie_list.*
 
 class FragmentMoviesList : Fragment(), MoviesListAdapter.Callback {
 
-
-    private val moviesList = mutableListOf<MoviePreview>()
     private var genreList = listOf<Genre>()
 
     private val viewModel by viewModels<MoviesListViewModel>()
@@ -33,13 +31,12 @@ class FragmentMoviesList : Fragment(), MoviesListAdapter.Callback {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         initObservers()
-        viewModel.getGenres(requireActivity())
-
+        viewModel.getGenres()
     }
 
     private fun initObservers() {
         viewModel.moviesLiveData.observe(viewLifecycleOwner, { movies ->
-//            val recyclerView = view.findViewById<RecyclerView>(R.id.rv_movie_list)
+            movies ?: return@observe
             val moviesListAdapter = MoviesListAdapter(movies, genreList)
             moviesListAdapter.initCallback(this)
             rv_movie_list.adapter = moviesListAdapter
@@ -52,8 +49,9 @@ class FragmentMoviesList : Fragment(), MoviesListAdapter.Callback {
         })
 
         viewModel.genresLiveData.observe(viewLifecycleOwner, {
+            it ?: return@observe
             genreList = it
-            viewModel.getMovies(requireActivity())
+            viewModel.getMovies()
         })
     }
 
