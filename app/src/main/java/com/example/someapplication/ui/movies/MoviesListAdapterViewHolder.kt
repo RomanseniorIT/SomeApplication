@@ -7,8 +7,11 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.someapplication.R
+import com.example.someapplication.data.database.movieslist.GenresEntity
+import com.example.someapplication.data.database.movieslist.MoviesListEntity
 import com.example.someapplication.data.model.Genre
-import com.example.someapplication.data.model.MoviePreview
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
 
 class MoviesListAdapterViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private var title = itemView.findViewById<TextView>(R.id.tv_title_card)
@@ -24,13 +27,14 @@ class MoviesListAdapterViewHolder(itemView: View) : RecyclerView.ViewHolder(item
     private var like = itemView.findViewById<ImageView>(R.id.iv_like_card)
     private var ageRate = itemView.findViewById<TextView>(R.id.tv_age_card)
 
-    fun onBind(item: MoviePreview, genreList: List<Genre>, callback: MoviesListAdapter.Callback) {
+    fun onBind(item: MoviesListEntity, genreList: List<GenresEntity>, callback: MoviesListAdapter.Callback) {
         itemView.setOnClickListener {
             callback.startMovieDetailsFragment(item)
         }
-        val genres = mutableListOf<Genre>()
-        for (i in 0 until item.genres.size) {
-            val genre = genreList.firstOrNull { it.id == item.genres[i] }
+        val itemGenres = Json.decodeFromString<List<Int>>(item.genres)
+        val genres = mutableListOf<GenresEntity>()
+        for (element in itemGenres) {
+            val genre = genreList.firstOrNull { it.id == element }
             if (genre != null) {
                 genres.add(genre)
             }
@@ -109,7 +113,7 @@ class MoviesListAdapterViewHolder(itemView: View) : RecyclerView.ViewHolder(item
         )
     }
 
-    private fun setGenres(genres: List<Genre>): String {
+    private fun setGenres(genres: List<GenresEntity>): String {
         var genresStr = ""
         for (i in genres.indices) {
             genresStr += if (i == genres.size - 1) {

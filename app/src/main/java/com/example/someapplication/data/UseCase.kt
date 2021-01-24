@@ -22,8 +22,7 @@ abstract class BaseUseCase<T, P>(protected val resultListener: ResultListener<T>
 class GetMovieUseCase(
     listener: BaseUseCase.ResultListener<MovieWithActors>,
     private val repository: MoviesRepository
-) :
-    BaseUseCase<MovieWithActors, Int>(listener) {
+) : BaseUseCase<MovieWithActors, Int>(listener) {
 
     override suspend fun execute(scope: CoroutineScope, param: Int) {
         scope.launch(dispatcher) {
@@ -40,6 +39,28 @@ class GetMovieUseCase(
                 }
             }
         }
+    }
+}
 
+class GetCachedMovieUseCase(
+    listener: BaseUseCase.ResultListener<MovieWithActors>,
+    private val repository: MoviesRepository
+) : BaseUseCase<MovieWithActors, Int>(listener) {
+
+    override suspend fun execute(scope: CoroutineScope, param: Int) {
+        scope.launch(dispatcher) {
+            try {
+                val movieEntity = repository.getCachedMovie(param)
+                val actors = repository.getCachedActors(param)
+                val movieWithActors = MovieWithActors(movieEntity, actors)
+                scope.launch(Dispatchers.Main) {
+                    resultListener.onSuccess(movieWithActors)
+                }
+            } catch (exception: Exception) {
+                scope.launch(Dispatchers.Main) {
+                    resultListener.onFailed(exception)
+                }
+            }
+        }
     }
 }

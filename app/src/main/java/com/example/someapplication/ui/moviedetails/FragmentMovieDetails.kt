@@ -13,10 +13,15 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.someapplication.R
+import com.example.someapplication.data.database.moviedetails.ActorsEntity
+import com.example.someapplication.data.database.moviedetails.MovieDetailsEntity
+import com.example.someapplication.data.database.movieslist.GenresEntity
 import com.example.someapplication.data.model.Actor
 import com.example.someapplication.data.model.Genre
 import com.example.someapplication.data.model.MovieFull
 import kotlinx.android.synthetic.main.fragment_movie_details.*
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
 
 class FragmentMovieDetails : Fragment() {
 
@@ -38,7 +43,7 @@ class FragmentMovieDetails : Fragment() {
         initObservers()
 
         movieId?.let {
-            viewModel.getMovie(it)
+            viewModel.getCachedMovie(it)
         }
     }
 
@@ -57,7 +62,7 @@ class FragmentMovieDetails : Fragment() {
     }
 
     @SuppressLint("SetTextI18n")
-    fun bind(movie: MovieFull?, actors: List<Actor>?) {
+    fun bind(movie: MovieDetailsEntity?, actors: List<ActorsEntity>?) {
         if (movie != null) {
             setRate(movie.ratings)
             val posterUrl = "https://image.tmdb.org/t/p/original/${movie.backdrop}"
@@ -70,7 +75,8 @@ class FragmentMovieDetails : Fragment() {
             tv_title.text = movie.title
             tv_reviews.text = "${movie.numberOfRatings} reviews"
             tv_storyline_description.text = movie.overview
-            tv_genre.text = setGenres(movie.genres)
+            val genres = Json.decodeFromString<List<Genre>>(movie.genres)
+            tv_genre.text = setGenres(genres)
 
             val movieDetailsAdapter = MovieDetailsAdapter(actors!!)
             rv_actors.adapter = movieDetailsAdapter

@@ -4,10 +4,10 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.someapplication.R
-import com.example.someapplication.data.model.Genre
-import com.example.someapplication.data.model.MoviePreview
+import com.example.someapplication.data.database.movieslist.GenresEntity
+import com.example.someapplication.data.database.movieslist.MoviesListEntity
 
-class MoviesListAdapter(val moviesList: List<MoviePreview>, val genres: List<Genre>) :
+class MoviesListAdapter(val moviesList: List<MoviesListEntity>, val genres: List<GenresEntity>) :
     RecyclerView.Adapter<MoviesListAdapterViewHolder>() {
 
     lateinit var callback: Callback
@@ -31,6 +31,6 @@ class MoviesListAdapter(val moviesList: List<MoviePreview>, val genres: List<Gen
     }
 
     interface Callback {
-        fun startMovieDetailsFragment(item: MoviePreview)
+        fun startMovieDetailsFragment(item: MoviesListEntity)
     }
 }

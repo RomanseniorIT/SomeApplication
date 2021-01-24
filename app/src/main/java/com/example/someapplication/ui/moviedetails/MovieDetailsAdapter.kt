@@ -4,9 +4,10 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.someapplication.R
+import com.example.someapplication.data.database.moviedetails.ActorsEntity
 import com.example.someapplication.data.model.Actor
 
-class MovieDetailsAdapter(val items: List<Actor>) :
+class MovieDetailsAdapter(val items: List<ActorsEntity>) :
     RecyclerView.Adapter<MovieDetailsAdapterViewHolder>() {
     override fun onCreateViewHolder(
         parent: ViewGroup,

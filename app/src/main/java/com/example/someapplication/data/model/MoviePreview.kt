@@ -1,6 +1,8 @@
 package com.example.someapplication.data.model
 
 import android.os.Parcelable
+import com.example.someapplication.data.database.moviedetails.ActorsEntity
+import com.example.someapplication.data.database.moviedetails.MovieDetailsEntity
 import kotlinx.android.parcel.Parcelize
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -35,6 +37,6 @@ data class MovieFull(
 )
 
 data class MovieWithActors(
-    val movieFull: MovieFull?,
-    val actors: List<Actor>?
+    val movieFull: MovieDetailsEntity?,
+    val actors: List<ActorsEntity>?
 )

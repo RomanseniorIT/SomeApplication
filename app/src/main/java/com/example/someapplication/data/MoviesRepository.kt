@@ -1,5 +1,11 @@
 package com.example.someapplication.data
 
+import com.example.someapplication.Mapper
+import com.example.someapplication.data.database.AppDataBase
+import com.example.someapplication.data.database.moviedetails.ActorsEntity
+import com.example.someapplication.data.database.moviedetails.MovieDetailsEntity
+import com.example.someapplication.data.database.movieslist.GenresEntity
+import com.example.someapplication.data.database.movieslist.MoviesListEntity
 import com.example.someapplication.data.model.Actor
 import com.example.someapplication.data.model.Genre
 import com.example.someapplication.data.model.MovieFull
@@ -11,51 +17,101 @@ import kotlinx.coroutines.withContext
 class MoviesRepository {
 
     private val api = NetworkModule().provideApiService()
+    private val daoMovieDetails = AppDataBase.instance.getMovieDetailsDbDao()
+    private val daoMoviesList = AppDataBase.instance.getMoviesListDbDao()
 
-    suspend fun loadMovies(): List<MoviePreview>? {
-        var moviePreviewList: List<MoviePreview>? = null
+    suspend fun loadMovies(): List<MoviesListEntity>? {
+        var moviePreviewListDto: List<MoviePreview>? = null
+        var moviesResult: List<MoviesListEntity>? = null
         try {
-            moviePreviewList = withContext(Dispatchers.IO) {
+            moviePreviewListDto = withContext(Dispatchers.IO) {
                 api.loadMovies(KEY, LANG, PAGE).results
             }
-        } catch (e: Exception) {
-        }
-        return moviePreviewList
-    }
-
-    suspend fun getGenres(): List<Genre>? {
-        var genres: List<Genre>? = null
-        try {
-            genres = withContext(Dispatchers.IO) {
-                api.getGenres(KEY, LANG).genres
+            moviesResult = Mapper.mapMoviesListToDb(moviePreviewListDto)
+            withContext(Dispatchers.IO) {
+                daoMoviesList.deleteCachedMoviesList()
+                daoMoviesList.saveMoviesList(moviesResult)
             }
         } catch (e: Exception) {
         }
-        return genres
+        return moviesResult
     }
 
-    suspend fun getMovie(movieId: Int): MovieFull? {
+    suspend fun getGenres(): List<GenresEntity>? {
+        var genresDto: List<Genre>? = null
+        var genresResult: List<GenresEntity>? = null
+        try {
+            genresDto = withContext(Dispatchers.IO) {
+                api.getGenres(KEY, LANG).genres
+            }
+            genresResult = Mapper.mapGenresToDb(genresDto)
+            withContext(Dispatchers.IO) {
+                daoMoviesList.deleteCachedGenresList()
+                daoMoviesList.saveGenresList(genresResult)
+            }
+        } catch (e: Exception) {
+        }
+        return genresResult
+    }
+
+    suspend fun loadCachedMovies(): List<MoviesListEntity>? {
+        return withContext(Dispatchers.IO) {
+            daoMoviesList.getCashedMoviesList()
+        }
+    }
+
+    suspend fun getCachedGenres(): List<GenresEntity>? {
+        return withContext(Dispatchers.IO) {
+            daoMoviesList.getCashedGenresList()
+        }
+    }
+
+    suspend fun getMovie(movieId: Int): MovieDetailsEntity? {
         var movieFull: MovieFull? = null
+        var movieDetailsEntity: MovieDetailsEntity? = null
         try {
             movieFull = withContext(Dispatchers.IO) {
                 api.getMovie(movieId, KEY, LANG)
             }
-        } catch (e: Exception) {
-            throw e
-        }
-        return movieFull
-    }
-
-    suspend fun getActors(movieId: Int): List<Actor>? {
-        var actors: List<Actor>? = null
-        try {
-            actors = withContext(Dispatchers.IO) {
-                api.getActors(movieId, KEY, LANG).actors
+            movieDetailsEntity = Mapper.mapDetailsToDb(movieFull)
+            withContext(Dispatchers.IO) {
+                daoMovieDetails.deleteCachedMovieDetails(movieId)
+                daoMovieDetails.saveMovieDetails(movieDetailsEntity)
             }
         } catch (e: Exception) {
             throw e
         }
-        return actors
+        return movieDetailsEntity
+    }
+
+    suspend fun getActors(movieId: Int): List<ActorsEntity>? {
+        var actors: List<Actor>? = null
+        var actorsEntityList: List<ActorsEntity>? = null
+        try {
+            actors = withContext(Dispatchers.IO) {
+                api.getActors(movieId, KEY, LANG).actors
+            }
+            actorsEntityList = Mapper.mapActorsToDb(actors, movieId)
+            withContext(Dispatchers.IO) {
+                daoMovieDetails.deleteCachedActorsList(movieId)
+                daoMovieDetails.saveActorsList(actorsEntityList)
+            }
+        } catch (e: Exception) {
+            throw e
+        }
+        return actorsEntityList
+    }
+
+    suspend fun getCachedMovie(movieId: Int): MovieDetailsEntity? {
+        return withContext(Dispatchers.IO) {
+            daoMovieDetails.getCashedMovieDetails(movieId)
+        }
+    }
+
+    suspend fun getCachedActors(movieId: Int): List<ActorsEntity>? {
+        return withContext(Dispatchers.IO) {
+            daoMovieDetails.getCashedActorsList(movieId)
+        }
     }
 
     companion object {

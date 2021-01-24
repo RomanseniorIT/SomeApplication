@@ -9,14 +9,15 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.someapplication.R
-import com.example.someapplication.data.model.Genre
+import com.example.someapplication.data.database.movieslist.GenresEntity
+import com.example.someapplication.data.database.movieslist.MoviesListEntity
 import com.example.someapplication.data.model.MoviePreview
 import com.example.someapplication.ui.moviedetails.FragmentMovieDetails
 import kotlinx.android.synthetic.main.fragment_movie_list.*
 
 class FragmentMoviesList : Fragment(), MoviesListAdapter.Callback {
 
-    private var genreList = listOf<Genre>()
+    private var genreList = listOf<GenresEntity>()
 
     private val viewModel by viewModels<MoviesListViewModel>()
 
@@ -31,7 +32,7 @@ class FragmentMoviesList : Fragment(), MoviesListAdapter.Callback {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         initObservers()
-        viewModel.getGenres()
+        viewModel.getCachedGenres()
     }
 
     private fun initObservers() {
@@ -51,11 +52,11 @@ class FragmentMoviesList : Fragment(), MoviesListAdapter.Callback {
         viewModel.genresLiveData.observe(viewLifecycleOwner, {
             it ?: return@observe
             genreList = it
-            viewModel.getMovies()
+            viewModel.getCachedMovies()
         })
     }
 
-    override fun startMovieDetailsFragment(item: MoviePreview) {
+    override fun startMovieDetailsFragment(item: MoviesListEntity) {
         fragmentManager
             ?.beginTransaction()
             ?.replace(R.id.fragment_container, FragmentMovieDetails.newInstance(item.id))

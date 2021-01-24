@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.someapplication.data.BaseUseCase
+import com.example.someapplication.data.GetCachedMovieUseCase
 import com.example.someapplication.data.MoviesRepository
 import com.example.someapplication.data.GetMovieUseCase
 import com.example.someapplication.data.model.MovieWithActors
@@ -16,6 +17,7 @@ class MovieDetailsViewModel : ViewModel(), BaseUseCase.ResultListener<MovieWithA
     private val _movieLiveData = MutableLiveData<MovieWithActors?>()
     private val repository = MoviesRepository()
     private val useCase = GetMovieUseCase(this, repository)
+    private val cachedUseCase = GetCachedMovieUseCase(this, repository)
 
     val movieLiveData: LiveData<MovieWithActors?> get() = _movieLiveData
 
@@ -23,6 +25,13 @@ class MovieDetailsViewModel : ViewModel(), BaseUseCase.ResultListener<MovieWithA
         viewModelScope.launch {
             useCase.execute(viewModelScope, movieId)
         }
+    }
+
+    fun getCachedMovie(movieId: Int) {
+        viewModelScope.launch {
+            cachedUseCase.execute(viewModelScope, movieId)
+        }
+        getMovie(movieId)
     }
 
     override fun onSuccess(result: MovieWithActors) {
