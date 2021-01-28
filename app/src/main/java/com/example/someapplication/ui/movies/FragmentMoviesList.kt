@@ -83,10 +83,10 @@ class FragmentMoviesList : Fragment(), MoviesListAdapter.Callback {
     }
 
     override fun startMovieDetailsFragment(item: MoviesListEntity) {
-        childFragmentManager
-            .beginTransaction()
-            .replace(R.id.fragment_container, FragmentMovieDetails.newInstance(item.id))
-            .addToBackStack(null)
-            .commit()
+        fragmentManager
+            ?.beginTransaction()
+            ?.replace(R.id.fragment_container, FragmentMovieDetails.newInstance(item.id))
+            ?.addToBackStack(null)
+            ?.commit()
     }
 }
