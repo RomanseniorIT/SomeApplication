@@ -66,6 +66,9 @@ dependencies {
     //Lifecycle
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.0-rc01'
 
+    //WorkManager
+    implementation "androidx.work:work-runtime-ktx:2.5.0"
+
     implementation "androidx.fragment:fragment-ktx:1.2.5"
 
     testImplementation 'junit:junit:4.13.1'
