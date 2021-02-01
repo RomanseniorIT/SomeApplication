@@ -2,6 +2,7 @@ package com.example.someapplication.service
 
 import android.content.Context
 import androidx.work.CoroutineWorker
+import androidx.work.Data
 import androidx.work.WorkerParameters
 import com.example.someapplication.data.MoviesRepository
 import kotlinx.coroutines.Dispatchers
@@ -21,7 +22,14 @@ class MyWorker(context: Context, workerParams: WorkerParameters) :
                 Result.success()
             }
         } catch (error: Throwable) {
-            Result.failure()
+            val data = Data.Builder()
+                .putString(ERROR_MSG, error.message)
+                .build()
+            Result.failure(data)
         }
+    }
+
+    companion object {
+        private const val ERROR_MSG = "error_msg"
     }
 }

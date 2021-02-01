@@ -71,7 +71,7 @@ class FragmentMoviesList : Fragment(), MoviesListAdapter.Callback {
         val uploadWork =
             PeriodicWorkRequest.Builder(MyWorker::class.java, 8, TimeUnit.HOURS)
                 .setConstraints(constr)
-                .addTag("MyWorker")
+                .addTag(TAG)
                 .build()
 
         val workManager = WorkManager.getInstance(requireActivity()).enqueue(uploadWork)
@@ -88,5 +88,9 @@ class FragmentMoviesList : Fragment(), MoviesListAdapter.Callback {
             ?.replace(R.id.fragment_container, FragmentMovieDetails.newInstance(item.id))
             ?.addToBackStack(null)
             ?.commit()
+    }
+
+    companion object {
+        private const val TAG = "MyWorker"
     }
 }
