@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.someapplication.R
 import com.example.someapplication.data.database.movieslist.GenresEntity
 import com.example.someapplication.data.database.movieslist.MoviesListEntity
-import com.example.someapplication.data.model.MoviePreview
 import com.example.someapplication.ui.moviedetails.FragmentMovieDetails
 import kotlinx.android.synthetic.main.fragment_movie_list.*
 
