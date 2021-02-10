@@ -4,9 +4,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
+import com.example.someapplication.data.MoviesPagingDataSource
 import com.example.someapplication.data.MoviesRepository
 import com.example.someapplication.data.database.movieslist.GenresEntity
 import com.example.someapplication.data.database.movieslist.MoviesListEntity
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
 class MoviesListViewModel : ViewModel() {
@@ -17,23 +23,28 @@ class MoviesListViewModel : ViewModel() {
     val genresLiveData: LiveData<List<GenresEntity>> get() = _genresLiveData
     val moviesLiveData: LiveData<List<MoviesListEntity>> get() = _moviesLiveData
 
-    fun getMovies() {
+    val movies: Flow<PagingData<MoviesListEntity>> =
+        Pager(config = PagingConfig(pageSize = 20, prefetchDistance = 2),
+            pagingSourceFactory = { MoviesPagingDataSource(repository) }
+        ).flow.cachedIn(viewModelScope)
+
+    private fun getMovies(page: Int) {
         viewModelScope.launch {
-            _moviesLiveData.value = repository.loadMovies()
+            _moviesLiveData.value = repository.loadMovies(page)
         }
     }
 
-    fun getGenres() {
+    private fun getGenres() {
         viewModelScope.launch {
             _genresLiveData.value = repository.getGenres()
         }
     }
 
-    fun getCachedMovies() {
+    fun getCachedMovies(page: Int) {
         viewModelScope.launch {
-            _moviesLiveData.value = repository.loadCachedMovies()
+            _moviesLiveData.value = repository.loadCachedMovies(page)
         }
-        getMovies()
+        getMovies(page)
     }
 
     fun getCachedGenres() {

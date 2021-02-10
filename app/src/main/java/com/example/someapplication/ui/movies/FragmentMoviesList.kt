@@ -3,13 +3,14 @@ package com.example.someapplication.ui.movies
 import android.annotation.SuppressLint
 import android.content.res.Configuration
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.work.*
 import com.example.someapplication.R
 import com.example.someapplication.data.database.movieslist.GenresEntity
@@ -17,13 +18,17 @@ import com.example.someapplication.data.database.movieslist.MoviesListEntity
 import com.example.someapplication.service.MyWorker
 import com.example.someapplication.ui.moviedetails.FragmentMovieDetails
 import kotlinx.android.synthetic.main.fragment_movie_list.*
+import kotlinx.coroutines.flow.collectLatest
 import java.util.concurrent.TimeUnit
 
 class FragmentMoviesList : Fragment(), MoviesListAdapter.Callback {
 
     private var genreList = listOf<GenresEntity>()
-
+    private var page = 1
     private val viewModel by viewModels<MoviesListViewModel>()
+
+    lateinit var gridLayoutManager: GridLayoutManager
+    lateinit var moviesListAdapter: MoviesListAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -37,27 +42,45 @@ class FragmentMoviesList : Fragment(), MoviesListAdapter.Callback {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         initObservers()
         initWorker()
+        initListeners()
         viewModel.getCachedGenres()
+        gridLayoutManager = if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            GridLayoutManager(context, 2)
+        } else {
+            GridLayoutManager(context, 4)
+        }
+        rv_movie_list.layoutManager = gridLayoutManager
+    }
+
+    private fun initListeners() {
+        rv_movie_list.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+//                super.onScrollStateChanged(recyclerView, newState)
+                if (isLastItemVisible()) {
+                    viewModel.getCachedMovies(page)
+                }
+            }
+        })
     }
 
     private fun initObservers() {
         viewModel.moviesLiveData.observe(viewLifecycleOwner, { movies ->
             movies ?: return@observe
-            val moviesListAdapter = MoviesListAdapter(movies, genreList)
-            moviesListAdapter.initCallback(this)
-            rv_movie_list.adapter = moviesListAdapter
-
-            if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-                rv_movie_list.layoutManager = GridLayoutManager(context, 2)
-            } else {
-                rv_movie_list.layoutManager = GridLayoutManager(context, 4)
-            }
+            page++
         })
 
         viewModel.genresLiveData.observe(viewLifecycleOwner, {
             it ?: return@observe
             genreList = it
-            viewModel.getCachedMovies()
+//            viewModel.getCachedMovies(page)
+            moviesListAdapter = MoviesListAdapter(genreList)
+            moviesListAdapter.initCallback(this)
+            rv_movie_list.adapter = moviesListAdapter
+            viewLifecycleOwner.lifecycleScope.launchWhenCreated {
+                viewModel.movies.collectLatest { pagingData ->
+                    moviesListAdapter.submitData(pagingData)
+                }
+            }
         })
     }
 
@@ -80,6 +103,12 @@ class FragmentMoviesList : Fragment(), MoviesListAdapter.Callback {
                 viewModel.getCachedGenres()
             }
         })
+    }
+
+    private fun isLastItemVisible(): Boolean {
+        val moviesAmount = moviesListAdapter.itemCount
+        val visibleItemPosition = gridLayoutManager.findLastVisibleItemPosition()
+        return moviesAmount <= visibleItemPosition+1
     }
 
     override fun startMovieDetailsFragment(item: MoviesListEntity) {

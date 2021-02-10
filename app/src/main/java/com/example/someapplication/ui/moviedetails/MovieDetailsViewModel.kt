@@ -4,11 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.someapplication.data.BaseUseCase
-import com.example.someapplication.data.GetCachedMovieUseCase
+import com.example.someapplication.usecases.BaseUseCase
+import com.example.someapplication.usecases.GetCachedMovieUseCase
 import com.example.someapplication.data.MoviesRepository
-import com.example.someapplication.data.GetMovieUseCase
 import com.example.someapplication.data.model.MovieWithActors
+import com.example.someapplication.usecases.GetMovieUseCase
 import kotlinx.coroutines.launch
 import java.net.ConnectException
 import java.net.UnknownHostException
@@ -21,7 +21,7 @@ class MovieDetailsViewModel : ViewModel(), BaseUseCase.ResultListener<MovieWithA
 
     val movieLiveData: LiveData<MovieWithActors?> get() = _movieLiveData
 
-    fun getMovie(movieId: Int) {
+    private fun getMovie(movieId: Int) {
         viewModelScope.launch {
             useCase.execute(viewModelScope, movieId)
         }

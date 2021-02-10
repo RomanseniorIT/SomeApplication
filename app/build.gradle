@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.someapplication"
-        minSdkVersion 18
+        minSdkVersion 21
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
@@ -22,6 +22,12 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+
+        debug {
+            buildConfigField "String", "BASE_URL", "\"https://api.themoviedb.org/3/\""
+            buildConfigField "String", "BASE_IMAGE_URL", "\"https://image.tmdb.org/t/p/original\""
+            buildConfigField "String", "API_KEY", "\"8d22ad8ff7d89a9f51399571d962eedb\""
         }
     }
 
@@ -68,6 +74,9 @@ dependencies {
 
     //WorkManager
     implementation "androidx.work:work-runtime-ktx:2.5.0"
+
+    //Paging
+    implementation "androidx.paging:paging-runtime:3.0.0-alpha13"
 
     implementation "androidx.fragment:fragment-ktx:1.2.5"
 

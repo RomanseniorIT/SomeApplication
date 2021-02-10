@@ -12,7 +12,7 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 object Mapper {
-    fun mapMoviesListToDb(moviesList: List<MoviePreview>): List<MoviesListEntity> {
+    fun mapMoviesListToDb(moviesList: List<MoviePreview>, page: Int): List<MoviesListEntity> {
         return moviesList.map {
             val genres = Json.encodeToString(it.genres)
             MoviesListEntity(
@@ -22,7 +22,8 @@ object Mapper {
                 it.ratings,
                 it.numberOfRatings,
                 genres,
-                it.minimumAge
+                it.minimumAge,
+                page
             )
         }
     }
@@ -37,7 +38,6 @@ object Mapper {
     }
 
     fun mapDetailsToDb(movieDetails: MovieFull): MovieDetailsEntity {
-
         val genres = Json.encodeToString(movieDetails.genres)
         return MovieDetailsEntity(
             movieDetails.id,

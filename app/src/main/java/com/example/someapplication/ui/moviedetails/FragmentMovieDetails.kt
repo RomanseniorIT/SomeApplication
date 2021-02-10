@@ -12,13 +12,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.example.someapplication.BuildConfig
 import com.example.someapplication.R
 import com.example.someapplication.data.database.moviedetails.ActorsEntity
 import com.example.someapplication.data.database.moviedetails.MovieDetailsEntity
-import com.example.someapplication.data.database.movieslist.GenresEntity
-import com.example.someapplication.data.model.Actor
 import com.example.someapplication.data.model.Genre
-import com.example.someapplication.data.model.MovieFull
 import kotlinx.android.synthetic.main.fragment_movie_details.*
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
@@ -32,16 +30,14 @@ class FragmentMovieDetails : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_movie_details, container, false)
-        return view
+        return inflater.inflate(R.layout.fragment_movie_details, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val movieId = arguments?.getInt(MOVIE_ID)
-
         initListeners()
         initObservers()
 
+        val movieId = arguments?.getInt(MOVIE_ID)
         movieId?.let {
             viewModel.getCachedMovie(it)
         }
@@ -50,11 +46,7 @@ class FragmentMovieDetails : Fragment() {
     private fun initObservers() {
         viewModel.movieLiveData.observe(viewLifecycleOwner, {
             if (it == null) {
-                Toast.makeText(
-                    context,
-                    "Check internet connection and restart",
-                    Toast.LENGTH_SHORT
-                ).show()
+                showNetworkErrorMessage()
             } else {
                 bind(it.movieFull, it.actors)
             }
@@ -62,10 +54,10 @@ class FragmentMovieDetails : Fragment() {
     }
 
     @SuppressLint("SetTextI18n")
-    fun bind(movie: MovieDetailsEntity?, actors: List<ActorsEntity>?) {
+    private fun bind(movie: MovieDetailsEntity?, actors: List<ActorsEntity>?) {
         if (movie != null) {
             setRate(movie.ratings)
-            val posterUrl = "https://image.tmdb.org/t/p/original/${movie.backdrop}"
+            val posterUrl = "${BuildConfig.BASE_IMAGE_URL}${movie.backdrop}"
             Glide.with(requireActivity())
                 .load(posterUrl)
                 .placeholder(R.drawable.ic_download)
@@ -77,7 +69,6 @@ class FragmentMovieDetails : Fragment() {
             tv_storyline_description.text = movie.overview
             val genres = Json.decodeFromString<List<Genre>>(movie.genres)
             tv_genre.text = setGenres(genres)
-
             val movieDetailsAdapter = MovieDetailsAdapter(actors!!)
             rv_actors.adapter = movieDetailsAdapter
             val linearLayoutManager =
@@ -158,6 +149,14 @@ class FragmentMovieDetails : Fragment() {
         iv_back_arrow.setOnClickListener {
             requireActivity().onBackPressed()
         }
+    }
+
+    private fun showNetworkErrorMessage() {
+        Toast.makeText(
+            context,
+            getString(R.string.network_error),
+            Toast.LENGTH_SHORT
+        ).show()
     }
 
     companion object {
