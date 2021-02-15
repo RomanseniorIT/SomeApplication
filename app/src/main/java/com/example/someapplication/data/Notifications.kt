@@ -35,10 +35,10 @@ class MovieNotifications(private val context: Context): Notifications {
     }
 
     override fun showNotification(movieId: Int, title: String) {
-        val contentUri = "https://com.example.someapplication/movie/$movieId".toUri()
+        val contentUri = String.format(DEEP_LINK, movieId).toUri()
         val builder = NotificationCompat.Builder(context, CHANNEL_NEW_MOVIE)
             .setContentTitle(title)
-            .setContentText("Click to check it;)")
+            .setContentText(context.getString(R.string.notif_click_to_check))
             .setSmallIcon(R.drawable.ic_movie_notif)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setOnlyAlertOnce(true)
@@ -66,5 +66,7 @@ class MovieNotifications(private val context: Context): Notifications {
         private const val REQUEST_CONTENT = 1
 
         private const val MOVIE_TAG = "movie"
+
+        private const val DEEP_LINK = "https://com.example.someapplication/movie/%d"
     }
 }
