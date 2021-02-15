@@ -15,10 +15,7 @@ import com.bumptech.glide.Glide
 import com.example.someapplication.R
 import com.example.someapplication.data.database.moviedetails.ActorsEntity
 import com.example.someapplication.data.database.moviedetails.MovieDetailsEntity
-import com.example.someapplication.data.database.movieslist.GenresEntity
-import com.example.someapplication.data.model.Actor
 import com.example.someapplication.data.model.Genre
-import com.example.someapplication.data.model.MovieFull
 import kotlinx.android.synthetic.main.fragment_movie_details.*
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json

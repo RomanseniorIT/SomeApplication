@@ -1,21 +1,17 @@
 package com.example.someapplication.ui.moviedetails
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.example.someapplication.data.BaseUseCase
-import com.example.someapplication.data.GetCachedMovieUseCase
-import com.example.someapplication.data.MoviesRepository
-import com.example.someapplication.data.GetMovieUseCase
+import android.app.Application
+import androidx.lifecycle.*
+import com.example.someapplication.data.*
 import com.example.someapplication.data.model.MovieWithActors
 import kotlinx.coroutines.launch
 import java.net.ConnectException
 import java.net.UnknownHostException
 
-class MovieDetailsViewModel : ViewModel(), BaseUseCase.ResultListener<MovieWithActors> {
+class MovieDetailsViewModel@JvmOverloads constructor(application: Application) : AndroidViewModel(application), BaseUseCase.ResultListener<MovieWithActors> {
     private val _movieLiveData = MutableLiveData<MovieWithActors?>()
-    private val repository = MoviesRepository()
+    private val notifications = MovieNotifications(application)
+    private val repository = MoviesRepository(notifications)
     private val useCase = GetMovieUseCase(this, repository)
     private val cachedUseCase = GetCachedMovieUseCase(this, repository)
 

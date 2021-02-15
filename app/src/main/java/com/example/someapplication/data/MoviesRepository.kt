@@ -14,23 +14,37 @@ import com.example.someapplication.data.network.NetworkModule
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class MoviesRepository {
+class MoviesRepository(private val notifications: Notifications) {
 
     private val api = NetworkModule().provideApiService()
     private val daoMovieDetails = AppDataBase.instance.getMovieDetailsDbDao()
     private val daoMoviesList = AppDataBase.instance.getMoviesListDbDao()
 
+    init {
+        notifications.initialize()
+    }
+
     suspend fun loadMovies(): List<MoviesListEntity>? {
         var moviePreviewListDto: List<MoviePreview>? = null
         var moviesResult: List<MoviesListEntity>? = null
+        var idList: List<Long>? = null
         try {
             moviePreviewListDto = withContext(Dispatchers.IO) {
                 api.loadMovies(KEY, LANG, PAGE).results
             }
             moviesResult = Mapper.mapMoviesListToDb(moviePreviewListDto)
             withContext(Dispatchers.IO) {
-                daoMoviesList.deleteCachedMoviesList()
-                daoMoviesList.saveMoviesList(moviesResult)
+                idList = daoMoviesList.saveMoviesList(moviesResult)
+            }
+            val filteredIdList = idList?.filter { it.toInt() != -1 }
+            if (!filteredIdList.isNullOrEmpty()) {
+                filteredIdList.forEach {
+                    notifications.showNotification(it.toInt(), "New movie in db")
+                }
+            } else {
+                moviesResult.maxByOrNull { it.ratings }?.let {
+                    notifications.showNotification(it.id, "Most rate movie")
+                }
             }
         } catch (e: Exception) {
         }
