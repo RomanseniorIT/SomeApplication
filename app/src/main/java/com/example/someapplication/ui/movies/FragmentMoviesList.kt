@@ -107,7 +107,7 @@ class FragmentMoviesList : Fragment(), MoviesListAdapter.Callback {
     override fun startMovieDetailsFragment(item: MoviesListEntity, view: View) {
         fragmentManager
                 ?.beginTransaction()
-                ?.addSharedElement(view, ViewCompat.getTransitionName(view)!!)
+                ?.addSharedElement(view, getString(R.string.details_transition_name))
                 ?.replace(R.id.fragment_container, FragmentMovieDetails.newInstance(item.id))
                 ?.addToBackStack(null)
                 ?.commit()
