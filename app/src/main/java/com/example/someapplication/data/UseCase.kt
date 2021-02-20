@@ -13,14 +13,14 @@ abstract class BaseUseCase<T, P>(protected val resultListener: ResultListener<T>
     abstract suspend fun execute(scope: CoroutineScope, param: P)
 
     interface ResultListener<T> {
-        fun onSuccess(result: T)
+        fun onSuccess(result: T, cacheResult: Boolean)
 
-        fun onFailed(exception: Exception)
+        fun onFailed(exception: Exception, cacheResult: Boolean)
     }
 }
 
 class GetMovieUseCase(
-    listener: BaseUseCase.ResultListener<MovieWithActors>,
+    listener: ResultListener<MovieWithActors>,
     private val repository: MoviesRepository
 ) : BaseUseCase<MovieWithActors, Int>(listener) {
 
@@ -31,11 +31,11 @@ class GetMovieUseCase(
                 val actors = repository.getActors(param)
                 val movieWithActors = MovieWithActors(movieFull, actors)
                 scope.launch(Dispatchers.Main) {
-                    resultListener.onSuccess(movieWithActors)
+                    resultListener.onSuccess(movieWithActors, false)
                 }
             } catch (exception: Exception) {
                 scope.launch(Dispatchers.Main) {
-                    resultListener.onFailed(exception)
+                    resultListener.onFailed(exception, false)
                 }
             }
         }
@@ -54,11 +54,11 @@ class GetCachedMovieUseCase(
                 val actors = repository.getCachedActors(param)
                 val movieWithActors = MovieWithActors(movieEntity, actors)
                 scope.launch(Dispatchers.Main) {
-                    resultListener.onSuccess(movieWithActors)
+                    resultListener.onSuccess(movieWithActors, true)
                 }
             } catch (exception: Exception) {
                 scope.launch(Dispatchers.Main) {
-                    resultListener.onFailed(exception)
+                    resultListener.onFailed(exception, true)
                 }
             }
         }

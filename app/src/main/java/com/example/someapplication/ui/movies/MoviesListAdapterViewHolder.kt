@@ -29,9 +29,9 @@ class MoviesListAdapterViewHolder(itemView: View) : RecyclerView.ViewHolder(item
     private var ageRate = itemView.findViewById<TextView>(R.id.tv_age_card)
 
     fun onBind(item: MoviesListEntity, genreList: List<GenresEntity>, callback: MoviesListAdapter.Callback) {
-        ViewCompat.setTransitionName(itemView.movie_item, String.format(itemView.context.getString(R.string.movie_item_transition_name), item.id))
+        ViewCompat.setTransitionName(itemView.cv_movie_item, String.format(itemView.context.getString(R.string.movie_item_transition_name), item.id))
         itemView.setOnClickListener {
-            callback.startMovieDetailsFragment(item, itemView.movie_item)
+            callback.startMovieDetailsFragment(item, itemView.cv_movie_item)
         }
         val itemGenres = Json.decodeFromString<List<Int>>(item.genres)
         val genres = mutableListOf<GenresEntity>()

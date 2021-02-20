@@ -27,18 +27,18 @@ class FragmentMovieDetails : Fragment() {
     private val viewModel by viewModels<MovieDetailsViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         sharedElementEnterTransition = MaterialContainerTransform().apply {
             drawingViewId = R.id.fragment_container
-            duration = 200L
+            duration = 300L
             scrimColor = Color.TRANSPARENT
         }
+        super.onCreate(savedInstanceState)
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_movie_details, container, false)
         return view
@@ -51,7 +51,7 @@ class FragmentMovieDetails : Fragment() {
         initObservers()
 
         movieId?.let {
-            viewModel.getCachedMovie(it)
+            viewModel.getMovie(it)
         }
     }
 
@@ -59,12 +59,22 @@ class FragmentMovieDetails : Fragment() {
         viewModel.movieLiveData.observe(viewLifecycleOwner, {
             if (it == null) {
                 Toast.makeText(
-                    context,
-                    "Check internet connection and restart",
-                    Toast.LENGTH_SHORT
+                        context,
+                        "No internet connection. Movie is shown from cache",
+                        Toast.LENGTH_SHORT
                 ).show()
             } else {
                 bind(it.movieFull, it.actors)
+            }
+        })
+
+        viewModel.uiProgressLiveData.observe(viewLifecycleOwner, {
+            if (it) {
+                progress.visibility = View.VISIBLE
+                sv_content.visibility = View.GONE
+            } else {
+                progress.visibility = View.GONE
+                sv_content.visibility = View.VISIBLE
             }
         })
     }
@@ -75,10 +85,10 @@ class FragmentMovieDetails : Fragment() {
             setRate(movie.ratings)
             val posterUrl = "https://image.tmdb.org/t/p/original/${movie.backdrop}"
             Glide.with(requireActivity())
-                .load(posterUrl)
-                .placeholder(R.drawable.ic_download)
-                .centerCrop()
-                .into(iv_header)
+                    .load(posterUrl)
+                    .placeholder(R.drawable.ic_download)
+                    .centerCrop()
+                    .into(iv_header)
             tv_age.text = if (movie.minimumAge) "+16" else "+13"
             tv_title.text = movie.title
             tv_reviews.text = "${movie.numberOfRatings} reviews"
@@ -89,7 +99,7 @@ class FragmentMovieDetails : Fragment() {
             val movieDetailsAdapter = MovieDetailsAdapter(actors!!)
             rv_actors.adapter = movieDetailsAdapter
             val linearLayoutManager =
-                LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+                    LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             rv_actors.layoutManager = linearLayoutManager
             val space = getString(R.string.rv_space)
             val itemDecorator = HorizontalSpaceItemDecorator(space)
@@ -146,19 +156,19 @@ class FragmentMovieDetails : Fragment() {
 
     private fun setGrayStar(starView: ImageView) {
         starView.setImageDrawable(
-            ContextCompat.getDrawable(
-                requireActivity(),
-                R.drawable.ic_gray_star
-            )
+                ContextCompat.getDrawable(
+                        requireActivity(),
+                        R.drawable.ic_gray_star
+                )
         )
     }
 
     private fun setRedStar(starView: ImageView) {
         starView.setImageDrawable(
-            ContextCompat.getDrawable(
-                requireActivity(),
-                R.drawable.ic_red_star
-            )
+                ContextCompat.getDrawable(
+                        requireActivity(),
+                        R.drawable.ic_red_star
+                )
         )
     }
 
