@@ -1,6 +1,7 @@
 package com.example.someapplication.ui.moviedetails
 
 import android.annotation.SuppressLint
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -16,6 +17,7 @@ import com.example.someapplication.R
 import com.example.someapplication.data.database.moviedetails.ActorsEntity
 import com.example.someapplication.data.database.moviedetails.MovieDetailsEntity
 import com.example.someapplication.data.model.Genre
+import com.google.android.material.transition.MaterialContainerTransform
 import kotlinx.android.synthetic.main.fragment_movie_details.*
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
@@ -23,6 +25,15 @@ import kotlinx.serialization.json.Json
 class FragmentMovieDetails : Fragment() {
 
     private val viewModel by viewModels<MovieDetailsViewModel>()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        sharedElementEnterTransition = MaterialContainerTransform().apply {
+            drawingViewId = R.id.fragment_container
+            duration = 200L
+            scrimColor = Color.TRANSPARENT
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
