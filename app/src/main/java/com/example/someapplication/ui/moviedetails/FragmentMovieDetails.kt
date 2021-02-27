@@ -1,6 +1,7 @@
 package com.example.someapplication.ui.moviedetails
 
 import android.annotation.SuppressLint
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -16,6 +17,7 @@ import com.example.someapplication.R
 import com.example.someapplication.data.database.moviedetails.ActorsEntity
 import com.example.someapplication.data.database.moviedetails.MovieDetailsEntity
 import com.example.someapplication.data.model.Genre
+import com.google.android.material.transition.MaterialContainerTransform
 import kotlinx.android.synthetic.main.fragment_movie_details.*
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
@@ -24,10 +26,21 @@ class FragmentMovieDetails : Fragment() {
 
     private val viewModel by viewModels<MovieDetailsViewModel>()
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        sharedElementEnterTransition = MaterialContainerTransform().apply {
+            drawingViewId = R.id.nav_host_fragment_container
+            duration = 300.toLong()
+            scrimColor = Color.TRANSPARENT
+        }
+
+    }
+
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_movie_details, container, false)
         return view
@@ -40,7 +53,7 @@ class FragmentMovieDetails : Fragment() {
         initObservers()
 
         movieId?.let {
-            viewModel.getCachedMovie(it)
+            viewModel.getMovie(it)
         }
     }
 
@@ -48,12 +61,22 @@ class FragmentMovieDetails : Fragment() {
         viewModel.movieLiveData.observe(viewLifecycleOwner, {
             if (it == null) {
                 Toast.makeText(
-                    context,
-                    "Check internet connection and restart",
-                    Toast.LENGTH_SHORT
+                        context,
+                        "No internet connection. Movie is shown from cache",
+                        Toast.LENGTH_SHORT
                 ).show()
             } else {
                 bind(it.movieFull, it.actors)
+            }
+        })
+
+        viewModel.uiProgressLiveData.observe(viewLifecycleOwner, {
+            if (it) {
+                progress.visibility = View.VISIBLE
+                sv_content.visibility = View.GONE
+            } else {
+                progress.visibility = View.GONE
+                sv_content.visibility = View.VISIBLE
             }
         })
     }
@@ -64,10 +87,10 @@ class FragmentMovieDetails : Fragment() {
             setRate(movie.ratings)
             val posterUrl = "https://image.tmdb.org/t/p/original/${movie.backdrop}"
             Glide.with(requireActivity())
-                .load(posterUrl)
-                .placeholder(R.drawable.ic_download)
-                .centerCrop()
-                .into(iv_header)
+                    .load(posterUrl)
+                    .placeholder(R.drawable.ic_download)
+                    .centerCrop()
+                    .into(iv_header)
             tv_age.text = if (movie.minimumAge) "+16" else "+13"
             tv_title.text = movie.title
             tv_reviews.text = "${movie.numberOfRatings} reviews"
@@ -78,7 +101,7 @@ class FragmentMovieDetails : Fragment() {
             val movieDetailsAdapter = MovieDetailsAdapter(actors!!)
             rv_actors.adapter = movieDetailsAdapter
             val linearLayoutManager =
-                LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+                    LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             rv_actors.layoutManager = linearLayoutManager
             val space = getString(R.string.rv_space)
             val itemDecorator = HorizontalSpaceItemDecorator(space)
@@ -135,19 +158,19 @@ class FragmentMovieDetails : Fragment() {
 
     private fun setGrayStar(starView: ImageView) {
         starView.setImageDrawable(
-            ContextCompat.getDrawable(
-                requireActivity(),
-                R.drawable.ic_gray_star
-            )
+                ContextCompat.getDrawable(
+                        requireActivity(),
+                        R.drawable.ic_gray_star
+                )
         )
     }
 
     private fun setRedStar(starView: ImageView) {
         starView.setImageDrawable(
-            ContextCompat.getDrawable(
-                requireActivity(),
-                R.drawable.ic_red_star
-            )
+                ContextCompat.getDrawable(
+                        requireActivity(),
+                        R.drawable.ic_red_star
+                )
         )
     }
 
@@ -158,13 +181,6 @@ class FragmentMovieDetails : Fragment() {
     }
 
     companion object {
-        private const val MOVIE_ID = "movie"
-        fun newInstance(moviePreview: Int): FragmentMovieDetails {
-            val fragment = FragmentMovieDetails()
-            val args = Bundle()
-            args.putInt(MOVIE_ID, moviePreview)
-            fragment.arguments = args
-            return fragment
-        }
+        private const val MOVIE_ID = "movieId"
     }
 }

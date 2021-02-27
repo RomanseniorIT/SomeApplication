@@ -19,27 +19,27 @@ class MoviesListViewModel @JvmOverloads constructor(application: Application) : 
 
     fun getMovies() {
         viewModelScope.launch {
-            _moviesLiveData.value = repository.loadMovies()
+            repository.loadMovies()
         }
+        getCachedMovies()
     }
 
     fun getGenres() {
         viewModelScope.launch {
-            _genresLiveData.value = repository.getGenres()
+            repository.getGenres()
         }
+        getCachedGenres()
     }
 
-    fun getCachedMovies() {
+    private fun getCachedMovies() {
         viewModelScope.launch {
             _moviesLiveData.value = repository.loadCachedMovies()
         }
-        getMovies()
     }
 
-    fun getCachedGenres() {
+    private fun getCachedGenres() {
         viewModelScope.launch {
             _genresLiveData.value = repository.getCachedGenres()
         }
-        getGenres()
     }
 }

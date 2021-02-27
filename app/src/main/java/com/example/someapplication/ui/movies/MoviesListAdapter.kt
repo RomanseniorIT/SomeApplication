@@ -1,6 +1,7 @@
 package com.example.someapplication.ui.movies
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.someapplication.R
@@ -31,6 +32,6 @@ class MoviesListAdapter(val moviesList: List<MoviesListEntity>, val genres: List
     }
 
     interface Callback {
-        fun startMovieDetailsFragment(item: MoviesListEntity)
+        fun startMovieDetailsFragment(item: MoviesListEntity, view: View)
     }
 }

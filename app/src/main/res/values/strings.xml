@@ -27,9 +27,13 @@
     <string name="min_text">min</string>
     <string name="plus_text">+</string>
 
-
+    //Notifications
     <string name="notif_app_name">Some application</string>
     <string name="notif_new_movie">Check new movie</string>
     <string name="notif_click_to_check">Click to check it;)</string>
+
+    //Anim
+    <string name="details_transition_name">details_transition_name</string>
+    <string name="movie_item_transition_name">movie_item_transition_name_%d</string>
 
 </resources>
