@@ -77,7 +77,7 @@ dependencies {
     implementation "androidx.work:work-runtime-ktx:2.5.0"
 
     //Paging
-    implementation "androidx.paging:paging-runtime:3.0.0-alpha13"
+    implementation "androidx.paging:paging-runtime-ktx:3.0.0-beta01"
 
     //Navigation
     implementation "androidx.navigation:navigation-fragment-ktx:2.3.3"

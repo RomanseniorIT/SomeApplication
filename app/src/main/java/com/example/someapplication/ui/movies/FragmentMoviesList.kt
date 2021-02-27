@@ -9,11 +9,10 @@ import android.view.ViewGroup
 import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import androidx.work.*
 import com.example.someapplication.R
 import com.example.someapplication.data.database.movieslist.GenresEntity
@@ -31,7 +30,6 @@ class FragmentMoviesList : Fragment(), MoviesListAdapter.Callback {
     private var page = 1
     private val viewModel by viewModels<MoviesListViewModel>()
 
-    lateinit var gridLayoutManager: GridLayoutManager
     lateinit var moviesListAdapter: MoviesListAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,33 +47,29 @@ class FragmentMoviesList : Fragment(), MoviesListAdapter.Callback {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_movie_list, container, false)
-        return view
+        return inflater.inflate(R.layout.fragment_movie_list, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        init()
         initObservers()
         initWorker()
         syncAnim()
+
         viewModel.getGenres()
-        initListeners()
-        gridLayoutManager = if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            GridLayoutManager(context, 2)
-        } else {
-            GridLayoutManager(context, 4)
-        }
-        rv_movie_list.layoutManager = gridLayoutManager
     }
 
-    private fun initListeners() {
-        rv_movie_list.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-//                super.onScrollStateChanged(recyclerView, newState)
-                if (isLastItemVisible()) {
-                    viewModel.getCachedMovies(page)
-                }
+    private fun init() {
+        moviesListAdapter = MoviesListAdapter(genreList)
+        moviesListAdapter.initCallback(this)
+        rv_movie_list.adapter = moviesListAdapter
+        val gridLayoutManager =
+            if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
+                GridLayoutManager(context, 2)
+            } else {
+                GridLayoutManager(context, 4)
             }
-        })
+        rv_movie_list.layoutManager = gridLayoutManager
     }
 
     private fun initObservers() {
@@ -87,11 +81,7 @@ class FragmentMoviesList : Fragment(), MoviesListAdapter.Callback {
         viewModel.genresLiveData.observe(viewLifecycleOwner, {
             it ?: return@observe
             genreList = it
-//            viewModel.getMovies()
-//            viewModel.getCachedMovies(page)
-            moviesListAdapter = MoviesListAdapter(genreList)
-            moviesListAdapter.initCallback(this)
-            rv_movie_list.adapter = moviesListAdapter
+            viewModel.getMovies(page)
             viewLifecycleOwner.lifecycleScope.launchWhenCreated {
                 viewModel.movies.collectLatest { pagingData ->
                     moviesListAdapter.submitData(pagingData)
@@ -136,12 +126,6 @@ class FragmentMoviesList : Fragment(), MoviesListAdapter.Callback {
         val destinationTransitionName = getString(R.string.details_transition_name)
         val extras = FragmentNavigatorExtras(view to destinationTransitionName)
         findNavController().navigate(direction, extras)
-    }
-
-    private fun isLastItemVisible(): Boolean {
-        val moviesAmount = moviesListAdapter.itemCount
-        val visibleItemPosition = gridLayoutManager.findLastVisibleItemPosition()
-        return moviesAmount <= visibleItemPosition+1
     }
 
     companion object {

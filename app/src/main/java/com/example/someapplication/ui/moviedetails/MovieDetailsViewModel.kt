@@ -27,7 +27,7 @@ class MovieDetailsViewModel @JvmOverloads constructor(application: Application) 
     val movieLiveData: LiveData<MovieWithActors?> get() = _movieLiveData
     val uiProgressLiveData: LiveData<Boolean> get() = _uiProgressLiveData
 
-    private fun getMovie(movieId: Int) {
+    fun getMovie(movieId: Int) {
         this.movieId = movieId
         _uiProgressLiveData.value = true
         viewModelScope.launch {

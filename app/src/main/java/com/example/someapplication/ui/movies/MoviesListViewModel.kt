@@ -32,14 +32,14 @@ class MoviesListViewModel @JvmOverloads constructor(application: Application) : 
             pagingSourceFactory = { MoviesPagingDataSource(repository) }
         ).flow.cachedIn(viewModelScope)
 
-    private fun getMovies(page: Int) {
+    fun getMovies(page: Int) {
         viewModelScope.launch {
             _moviesLiveData.value = repository.loadMovies(page)
         }
-        getCachedMovies()
+        getCachedMovies(page)
     }
 
-    private fun getGenres() {
+    fun getGenres() {
         viewModelScope.launch {
             repository.getGenres()
         }
