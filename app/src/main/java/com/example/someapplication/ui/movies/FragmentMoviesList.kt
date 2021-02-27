@@ -6,8 +6,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.FragmentNavigatorExtras
+import androidx.navigation.fragment.findNavController
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -16,8 +19,9 @@ import com.example.someapplication.R
 import com.example.someapplication.data.database.movieslist.GenresEntity
 import com.example.someapplication.data.database.movieslist.MoviesListEntity
 import com.example.someapplication.service.MyWorker
-import com.example.someapplication.ui.moviedetails.FragmentMovieDetails
+import com.google.android.material.transition.MaterialElevationScale
 import kotlinx.android.synthetic.main.fragment_movie_list.*
+import kotlinx.android.synthetic.main.rv_item_movie.*
 import kotlinx.coroutines.flow.collectLatest
 import java.util.concurrent.TimeUnit
 
@@ -29,6 +33,16 @@ class FragmentMoviesList : Fragment(), MoviesListAdapter.Callback {
 
     lateinit var gridLayoutManager: GridLayoutManager
     lateinit var moviesListAdapter: MoviesListAdapter
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        exitTransition = MaterialElevationScale(false).apply {
+            duration = 300L
+        }
+        reenterTransition = MaterialElevationScale(true).apply {
+            duration = 300L
+        }
+        super.onCreate(savedInstanceState)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -42,8 +56,9 @@ class FragmentMoviesList : Fragment(), MoviesListAdapter.Callback {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         initObservers()
         initWorker()
+        syncAnim()
+        viewModel.getGenres()
         initListeners()
-        viewModel.getCachedGenres()
         gridLayoutManager = if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
             GridLayoutManager(context, 2)
         } else {
@@ -72,6 +87,7 @@ class FragmentMoviesList : Fragment(), MoviesListAdapter.Callback {
         viewModel.genresLiveData.observe(viewLifecycleOwner, {
             it ?: return@observe
             genreList = it
+//            viewModel.getMovies()
 //            viewModel.getCachedMovies(page)
             moviesListAdapter = MoviesListAdapter(genreList)
             moviesListAdapter.initCallback(this)
@@ -100,23 +116,32 @@ class FragmentMoviesList : Fragment(), MoviesListAdapter.Callback {
         val workManager = WorkManager.getInstance(requireActivity()).enqueue(uploadWork)
         workManager.state.observe(viewLifecycleOwner, { state ->
             if (state == Operation.SUCCESS) {
-                viewModel.getCachedGenres()
+                viewModel.getGenres()
             }
         })
+    }
+
+    private fun syncAnim() {
+        postponeEnterTransition()
+        view?.doOnPreDraw {
+            startPostponedEnterTransition()
+        }
+    }
+
+    override fun startMovieDetailsFragment(item: MoviesListEntity, view: View) {
+        val direction = FragmentMoviesListDirections
+            .actionFragmentMoviesListToFragmentMovieDetails(
+                item.id
+            )
+        val destinationTransitionName = getString(R.string.details_transition_name)
+        val extras = FragmentNavigatorExtras(view to destinationTransitionName)
+        findNavController().navigate(direction, extras)
     }
 
     private fun isLastItemVisible(): Boolean {
         val moviesAmount = moviesListAdapter.itemCount
         val visibleItemPosition = gridLayoutManager.findLastVisibleItemPosition()
         return moviesAmount <= visibleItemPosition+1
-    }
-
-    override fun startMovieDetailsFragment(item: MoviesListEntity) {
-        fragmentManager
-            ?.beginTransaction()
-            ?.replace(R.id.fragment_container, FragmentMovieDetails.newInstance(item.id))
-            ?.addToBackStack(null)
-            ?.commit()
     }
 
     companion object {

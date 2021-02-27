@@ -1,6 +1,7 @@
 package com.example.someapplication.ui.movies
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
@@ -63,7 +64,7 @@ class MoviesListAdapter(val genres: List<GenresEntity>) :
     }
 
     interface Callback {
-        fun startMovieDetailsFragment(item: MoviesListEntity)
+        fun startMovieDetailsFragment(item: MoviesListEntity, view: View)
     }
 
     object MoviesComparator : DiffUtil.ItemCallback<MoviesListEntity>() {

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_graph"
+    app:startDestination="@id/fragmentMoviesList">
+
+    <fragment
+        android:id="@+id/fragmentMoviesList"
+        android:name="com.example.someapplication.ui.movies.FragmentMoviesList"
+        android:label="FragmentMoviesList">
+
+        <action
+            android:id="@+id/actionFragmentMoviesListToFragmentMovieDetails"
+            app:destination="@id/fragmentMovieDetails" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragmentMovieDetails"
+        android:name="com.example.someapplication.ui.moviedetails.FragmentMovieDetails"
+        android:label="FragmentMovieDetails">
+
+        <argument
+            android:name="movieId"
+            app:argType="integer" />
+
+        <deepLink
+            android:id="@+id/deepLink"
+            app:action="ACTION_VIEW"
+            app:uri="https://com.example.someapplication/movie/{movieId}" />
+
+    </fragment>
+
+</navigation>

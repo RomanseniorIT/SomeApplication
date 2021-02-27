@@ -1,5 +1,8 @@
 package com.example.someapplication.ui.movies
 
+import android.app.Application
+import androidx.lifecycle.*
+import com.example.someapplication.data.MovieNotifications
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -15,10 +18,11 @@ import com.example.someapplication.data.database.movieslist.MoviesListEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
-class MoviesListViewModel : ViewModel() {
+class MoviesListViewModel @JvmOverloads constructor(application: Application) : AndroidViewModel(application) {
     private val _moviesLiveData = MutableLiveData<List<MoviesListEntity>>()
     private val _genresLiveData = MutableLiveData<List<GenresEntity>>()
-    private val repository = MoviesRepository()
+    private val notifications = MovieNotifications(application)
+    private val repository = MoviesRepository(notifications)
 
     val genresLiveData: LiveData<List<GenresEntity>> get() = _genresLiveData
     val moviesLiveData: LiveData<List<MoviesListEntity>> get() = _moviesLiveData
@@ -32,25 +36,25 @@ class MoviesListViewModel : ViewModel() {
         viewModelScope.launch {
             _moviesLiveData.value = repository.loadMovies(page)
         }
+        getCachedMovies()
     }
 
     private fun getGenres() {
         viewModelScope.launch {
-            _genresLiveData.value = repository.getGenres()
+            repository.getGenres()
         }
+        getCachedGenres()
     }
 
-    fun getCachedMovies(page: Int) {
+    private fun getCachedMovies(page: Int) {
         viewModelScope.launch {
             _moviesLiveData.value = repository.loadCachedMovies(page)
         }
-        getMovies(page)
     }
 
-    fun getCachedGenres() {
+    private fun getCachedGenres() {
         viewModelScope.launch {
             _genresLiveData.value = repository.getCachedGenres()
         }
-        getGenres()
     }
 }

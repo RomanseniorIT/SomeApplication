@@ -5,13 +5,14 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.someapplication.BuildConfig
 import com.example.someapplication.R
 import com.example.someapplication.data.database.movieslist.GenresEntity
 import com.example.someapplication.data.database.movieslist.MoviesListEntity
-import com.example.someapplication.data.model.Genre
+import kotlinx.android.synthetic.main.rv_item_movie.view.*
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
@@ -31,8 +32,9 @@ class MoviesListAdapterViewHolder(itemView: View) : RecyclerView.ViewHolder(item
 
     @SuppressLint("SetTextI18n")
     fun onBind(item: MoviesListEntity, genreList: List<GenresEntity>, callback: MoviesListAdapter.Callback) {
+        ViewCompat.setTransitionName(itemView.cv_movie_item, String.format(itemView.context.getString(R.string.movie_item_transition_name), item.id))
         itemView.setOnClickListener {
-            callback.startMovieDetailsFragment(item)
+            callback.startMovieDetailsFragment(item, itemView.cv_movie_item)
         }
         val itemGenres = Json.decodeFromString<List<Int>>(item.genres)
         val genres = mutableListOf<GenresEntity>()
