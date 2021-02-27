@@ -6,17 +6,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.ViewCompat
 import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.FragmentNavigatorExtras
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.work.*
 import com.example.someapplication.R
 import com.example.someapplication.data.database.movieslist.GenresEntity
 import com.example.someapplication.data.database.movieslist.MoviesListEntity
 import com.example.someapplication.service.MyWorker
-import com.example.someapplication.ui.moviedetails.FragmentMovieDetails
 import com.google.android.material.transition.MaterialElevationScale
 import kotlinx.android.synthetic.main.fragment_movie_list.*
 import kotlinx.android.synthetic.main.rv_item_movie.*
@@ -40,9 +40,9 @@ class FragmentMoviesList : Fragment(), MoviesListAdapter.Callback {
     }
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_movie_list, container, false)
         return view
@@ -79,15 +79,15 @@ class FragmentMoviesList : Fragment(), MoviesListAdapter.Callback {
     @SuppressLint("RestrictedApi")
     private fun initWorker() {
         val constr = Constraints.Builder()
-                .setRequiredNetworkType(NetworkType.CONNECTED)
-                .setRequiresCharging(true)
-                .build()
+            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .setRequiresCharging(true)
+            .build()
 
         val uploadWork =
-                PeriodicWorkRequest.Builder(MyWorker::class.java, 8, TimeUnit.HOURS)
-                        .setConstraints(constr)
-                        .addTag(TAG)
-                        .build()
+            PeriodicWorkRequest.Builder(MyWorker::class.java, 8, TimeUnit.HOURS)
+                .setConstraints(constr)
+                .addTag(TAG)
+                .build()
 
         val workManager = WorkManager.getInstance(requireActivity()).enqueue(uploadWork)
         workManager.state.observe(viewLifecycleOwner, { state ->
@@ -105,12 +105,13 @@ class FragmentMoviesList : Fragment(), MoviesListAdapter.Callback {
     }
 
     override fun startMovieDetailsFragment(item: MoviesListEntity, view: View) {
-        fragmentManager
-                ?.beginTransaction()
-                ?.addSharedElement(view, getString(R.string.details_transition_name))
-                ?.replace(R.id.fragment_container, FragmentMovieDetails.newInstance(item.id))
-                ?.addToBackStack(null)
-                ?.commit()
+        val direction = FragmentMoviesListDirections
+            .actionFragmentMoviesListToFragmentMovieDetails(
+                item.id
+            )
+        val destinationTransitionName = getString(R.string.details_transition_name)
+        val extras = FragmentNavigatorExtras(view to destinationTransitionName)
+        findNavController().navigate(direction, extras)
     }
 
     companion object {

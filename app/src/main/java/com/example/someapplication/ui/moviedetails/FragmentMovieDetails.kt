@@ -27,12 +27,14 @@ class FragmentMovieDetails : Fragment() {
     private val viewModel by viewModels<MovieDetailsViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
         sharedElementEnterTransition = MaterialContainerTransform().apply {
-            drawingViewId = R.id.fragment_container
-            duration = 300L
+            drawingViewId = R.id.nav_host_fragment_container
+            duration = 300.toLong()
             scrimColor = Color.TRANSPARENT
         }
-        super.onCreate(savedInstanceState)
+
     }
 
     override fun onCreateView(
@@ -179,13 +181,6 @@ class FragmentMovieDetails : Fragment() {
     }
 
     companion object {
-        private const val MOVIE_ID = "movie"
-        fun newInstance(moviePreview: Int): FragmentMovieDetails {
-            val fragment = FragmentMovieDetails()
-            val args = Bundle()
-            args.putInt(MOVIE_ID, moviePreview)
-            fragment.arguments = args
-            return fragment
-        }
+        private const val MOVIE_ID = "movieId"
     }
 }
