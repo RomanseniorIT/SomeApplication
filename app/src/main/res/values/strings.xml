@@ -27,6 +27,8 @@
     <string name="min_text">min</string>
     <string name="plus_text">+</string>
 
+    <string name="network_error">Check internet connection and restart</string>
+
     //Notifications
     <string name="notif_app_name">Some application</string>
     <string name="notif_new_movie">Check new movie</string>

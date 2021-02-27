@@ -18,7 +18,7 @@ class MyWorker(context: Context, workerParams: WorkerParameters) :
 
     override suspend fun doWork(): Result = coroutineScope {
         try {
-            val result = withContext(Dispatchers.IO) { repository.loadMovies() }
+            val result = withContext(Dispatchers.IO) { repository.loadMovies(1) }
             if (result.isNullOrEmpty()) {
                 Result.retry()
             } else {

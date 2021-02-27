@@ -7,8 +7,8 @@ import androidx.room.Query
 
 @Dao
 interface MoviesListDao {
-    @Query("SELECT * FROM movies_list")
-    fun getCashedMoviesList(): List<MoviesListEntity>
+    @Query("SELECT * FROM movies_list WHERE page = :page")
+    fun getCashedMoviesList(page: Int): List<MoviesListEntity>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun saveMoviesList(moviesList: List<MoviesListEntity>): List<Long>

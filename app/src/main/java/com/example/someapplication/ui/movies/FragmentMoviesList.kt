@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
@@ -20,14 +21,16 @@ import com.example.someapplication.service.MyWorker
 import com.google.android.material.transition.MaterialElevationScale
 import kotlinx.android.synthetic.main.fragment_movie_list.*
 import kotlinx.android.synthetic.main.rv_item_movie.*
-import kotlinx.android.synthetic.main.rv_item_movie.view.*
+import kotlinx.coroutines.flow.collectLatest
 import java.util.concurrent.TimeUnit
 
 class FragmentMoviesList : Fragment(), MoviesListAdapter.Callback {
 
     private var genreList = listOf<GenresEntity>()
-
+    private var page = 1
     private val viewModel by viewModels<MoviesListViewModel>()
+
+    lateinit var moviesListAdapter: MoviesListAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         exitTransition = MaterialElevationScale(false).apply {
@@ -44,35 +47,46 @@ class FragmentMoviesList : Fragment(), MoviesListAdapter.Callback {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_movie_list, container, false)
-        return view
+        return inflater.inflate(R.layout.fragment_movie_list, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        init()
         initObservers()
         initWorker()
         syncAnim()
+
         viewModel.getGenres()
+    }
+
+    private fun init() {
+        moviesListAdapter = MoviesListAdapter(genreList)
+        moviesListAdapter.initCallback(this)
+        rv_movie_list.adapter = moviesListAdapter
+        val gridLayoutManager =
+            if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
+                GridLayoutManager(context, 2)
+            } else {
+                GridLayoutManager(context, 4)
+            }
+        rv_movie_list.layoutManager = gridLayoutManager
     }
 
     private fun initObservers() {
         viewModel.moviesLiveData.observe(viewLifecycleOwner, { movies ->
             movies ?: return@observe
-            val moviesListAdapter = MoviesListAdapter(movies, genreList)
-            moviesListAdapter.initCallback(this)
-            rv_movie_list.adapter = moviesListAdapter
-
-            if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-                rv_movie_list.layoutManager = GridLayoutManager(context, 2)
-            } else {
-                rv_movie_list.layoutManager = GridLayoutManager(context, 4)
-            }
+            page++
         })
 
         viewModel.genresLiveData.observe(viewLifecycleOwner, {
             it ?: return@observe
             genreList = it
-            viewModel.getMovies()
+            viewModel.getMovies(page)
+            viewLifecycleOwner.lifecycleScope.launchWhenCreated {
+                viewModel.movies.collectLatest { pagingData ->
+                    moviesListAdapter.submitData(pagingData)
+                }
+            }
         })
     }
 

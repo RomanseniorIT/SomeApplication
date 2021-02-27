@@ -4,7 +4,8 @@ import android.graphics.Rect
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 
-class HorizontalSpaceItemDecorator(val space: String) : RecyclerView.ItemDecoration() {
+class HorizontalSpaceItemDecorator(private val space: String) : RecyclerView.ItemDecoration() {
+
     override fun getItemOffsets(
         outRect: Rect,
         view: View,
@@ -22,6 +23,5 @@ class HorizontalSpaceItemDecorator(val space: String) : RecyclerView.ItemDecorat
                 outRect.left = space.toInt()
             }
         }
-
     }
 }

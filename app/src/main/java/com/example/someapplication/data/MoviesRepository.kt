@@ -1,5 +1,7 @@
 package com.example.someapplication.data
 
+import androidx.paging.PagingSource
+import com.example.someapplication.BuildConfig
 import com.example.someapplication.Mapper
 import com.example.someapplication.data.database.AppDataBase
 import com.example.someapplication.data.database.moviedetails.ActorsEntity
@@ -24,15 +26,15 @@ class MoviesRepository(private val notifications: Notifications) {
         notifications.initialize()
     }
 
-    suspend fun loadMovies(): List<MoviesListEntity>? {
+    suspend fun loadMovies(page: Int): List<MoviesListEntity>? {
         var moviePreviewListDto: List<MoviePreview>? = null
         var moviesResult: List<MoviesListEntity>? = null
         var idList: List<Long>? = null
         try {
             moviePreviewListDto = withContext(Dispatchers.IO) {
-                api.loadMovies(KEY, LANG, PAGE).results
+                api.loadMovies(BuildConfig.API_KEY, LANG, page).results
             }
-            moviesResult = Mapper.mapMoviesListToDb(moviePreviewListDto)
+            moviesResult = Mapper.mapMoviesListToDb(moviePreviewListDto, page)
             withContext(Dispatchers.IO) {
                 idList = daoMoviesList.saveMoviesList(moviesResult)
             }
@@ -56,7 +58,7 @@ class MoviesRepository(private val notifications: Notifications) {
         var genresResult: List<GenresEntity>? = null
         try {
             genresDto = withContext(Dispatchers.IO) {
-                api.getGenres(KEY, LANG).genres
+                api.getGenres(BuildConfig.API_KEY, LANG).genres
             }
             genresResult = Mapper.mapGenresToDb(genresDto)
             withContext(Dispatchers.IO) {
@@ -68,9 +70,9 @@ class MoviesRepository(private val notifications: Notifications) {
         return genresResult
     }
 
-    suspend fun loadCachedMovies(): List<MoviesListEntity>? {
+    suspend fun loadCachedMovies(page: Int): List<MoviesListEntity>? {
         return withContext(Dispatchers.IO) {
-            daoMoviesList.getCashedMoviesList()
+            daoMoviesList.getCashedMoviesList(page)
         }
     }
 
@@ -85,7 +87,7 @@ class MoviesRepository(private val notifications: Notifications) {
         var movieDetailsEntity: MovieDetailsEntity? = null
         try {
             movieFull = withContext(Dispatchers.IO) {
-                api.getMovie(movieId, KEY, LANG)
+                api.getMovie(movieId, BuildConfig.API_KEY, LANG)
             }
             movieDetailsEntity = Mapper.mapDetailsToDb(movieFull)
             withContext(Dispatchers.IO) {
@@ -103,7 +105,7 @@ class MoviesRepository(private val notifications: Notifications) {
         var actorsEntityList: List<ActorsEntity>? = null
         try {
             actors = withContext(Dispatchers.IO) {
-                api.getActors(movieId, KEY, LANG).actors
+                api.getActors(movieId, BuildConfig.API_KEY, LANG).actors
             }
             actorsEntityList = Mapper.mapActorsToDb(actors, movieId)
             withContext(Dispatchers.IO) {
@@ -130,7 +132,6 @@ class MoviesRepository(private val notifications: Notifications) {
 
     companion object {
         private const val LANG = "en-US"
-        private const val KEY = "8d22ad8ff7d89a9f51399571d962eedb"
         private const val PAGE = 1
     }
 }

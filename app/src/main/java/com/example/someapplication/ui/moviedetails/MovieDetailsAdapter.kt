@@ -7,8 +7,9 @@ import com.example.someapplication.R
 import com.example.someapplication.data.database.moviedetails.ActorsEntity
 import com.example.someapplication.data.model.Actor
 
-class MovieDetailsAdapter(val items: List<ActorsEntity>) :
+class MovieDetailsAdapter(private val items: List<ActorsEntity>) :
     RecyclerView.Adapter<MovieDetailsAdapterViewHolder>() {
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int

@@ -1,5 +1,6 @@
 package com.example.someapplication.data.network
 
+import com.example.someapplication.BuildConfig
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
@@ -14,7 +15,7 @@ class NetworkModule() {
 
     fun provideApiService(): MoviesApi {
         val retrofit = Retrofit.Builder()
-            .baseUrl(BASE_URL)
+            .baseUrl(BuildConfig.BASE_URL)
             .addConverterFactory(json.asConverterFactory(CONTENT_TYPE))
             .build()
         return retrofit.create(MoviesApi::class.java)
@@ -22,6 +23,5 @@ class NetworkModule() {
 
     companion object {
         private val CONTENT_TYPE = "application/json; charset=utf-8".toMediaType()
-        private const val BASE_URL = "https://api.themoviedb.org/3/"
     }
 }

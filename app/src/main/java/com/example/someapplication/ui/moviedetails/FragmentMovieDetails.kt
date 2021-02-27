@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.example.someapplication.BuildConfig
 import com.example.someapplication.R
 import com.example.someapplication.data.database.moviedetails.ActorsEntity
 import com.example.someapplication.data.database.moviedetails.MovieDetailsEntity
@@ -38,20 +39,18 @@ class FragmentMovieDetails : Fragment() {
     }
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_movie_details, container, false)
-        return view
+        return inflater.inflate(R.layout.fragment_movie_details, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val movieId = arguments?.getInt(MOVIE_ID)
-
         initListeners()
         initObservers()
 
+        val movieId = arguments?.getInt(MOVIE_ID)
         movieId?.let {
             viewModel.getMovie(it)
         }
@@ -60,11 +59,7 @@ class FragmentMovieDetails : Fragment() {
     private fun initObservers() {
         viewModel.movieLiveData.observe(viewLifecycleOwner, {
             if (it == null) {
-                Toast.makeText(
-                        context,
-                        "No internet connection. Movie is shown from cache",
-                        Toast.LENGTH_SHORT
-                ).show()
+                showNetworkErrorMessage()
             } else {
                 bind(it.movieFull, it.actors)
             }
@@ -82,26 +77,25 @@ class FragmentMovieDetails : Fragment() {
     }
 
     @SuppressLint("SetTextI18n")
-    fun bind(movie: MovieDetailsEntity?, actors: List<ActorsEntity>?) {
+    private fun bind(movie: MovieDetailsEntity?, actors: List<ActorsEntity>?) {
         if (movie != null) {
             setRate(movie.ratings)
-            val posterUrl = "https://image.tmdb.org/t/p/original/${movie.backdrop}"
+            val posterUrl = "${BuildConfig.BASE_IMAGE_URL}${movie.backdrop}"
             Glide.with(requireActivity())
-                    .load(posterUrl)
-                    .placeholder(R.drawable.ic_download)
-                    .centerCrop()
-                    .into(iv_header)
+                .load(posterUrl)
+                .placeholder(R.drawable.ic_download)
+                .centerCrop()
+                .into(iv_header)
             tv_age.text = if (movie.minimumAge) "+16" else "+13"
             tv_title.text = movie.title
             tv_reviews.text = "${movie.numberOfRatings} reviews"
             tv_storyline_description.text = movie.overview
             val genres = Json.decodeFromString<List<Genre>>(movie.genres)
             tv_genre.text = setGenres(genres)
-
             val movieDetailsAdapter = MovieDetailsAdapter(actors!!)
             rv_actors.adapter = movieDetailsAdapter
             val linearLayoutManager =
-                    LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+                LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             rv_actors.layoutManager = linearLayoutManager
             val space = getString(R.string.rv_space)
             val itemDecorator = HorizontalSpaceItemDecorator(space)
@@ -158,19 +152,19 @@ class FragmentMovieDetails : Fragment() {
 
     private fun setGrayStar(starView: ImageView) {
         starView.setImageDrawable(
-                ContextCompat.getDrawable(
-                        requireActivity(),
-                        R.drawable.ic_gray_star
-                )
+            ContextCompat.getDrawable(
+                requireActivity(),
+                R.drawable.ic_gray_star
+            )
         )
     }
 
     private fun setRedStar(starView: ImageView) {
         starView.setImageDrawable(
-                ContextCompat.getDrawable(
-                        requireActivity(),
-                        R.drawable.ic_red_star
-                )
+            ContextCompat.getDrawable(
+                requireActivity(),
+                R.drawable.ic_red_star
+            )
         )
     }
 
@@ -178,6 +172,14 @@ class FragmentMovieDetails : Fragment() {
         iv_back_arrow.setOnClickListener {
             requireActivity().onBackPressed()
         }
+    }
+
+    private fun showNetworkErrorMessage() {
+        Toast.makeText(
+            context,
+            getString(R.string.network_error),
+            Toast.LENGTH_SHORT
+        ).show()
     }
 
     companion object {

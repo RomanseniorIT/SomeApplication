@@ -1,5 +1,6 @@
 package com.example.someapplication.ui.movies
 
+import android.annotation.SuppressLint
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -7,6 +8,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.someapplication.BuildConfig
 import com.example.someapplication.R
 import com.example.someapplication.data.database.movieslist.GenresEntity
 import com.example.someapplication.data.database.movieslist.MoviesListEntity
@@ -28,6 +30,7 @@ class MoviesListAdapterViewHolder(itemView: View) : RecyclerView.ViewHolder(item
     private var like = itemView.findViewById<ImageView>(R.id.iv_like_card)
     private var ageRate = itemView.findViewById<TextView>(R.id.tv_age_card)
 
+    @SuppressLint("SetTextI18n")
     fun onBind(item: MoviesListEntity, genreList: List<GenresEntity>, callback: MoviesListAdapter.Callback) {
         ViewCompat.setTransitionName(itemView.cv_movie_item, String.format(itemView.context.getString(R.string.movie_item_transition_name), item.id))
         itemView.setOnClickListener {
@@ -54,7 +57,7 @@ class MoviesListAdapterViewHolder(itemView: View) : RecyclerView.ViewHolder(item
                 )
             )
         }
-        val posterUrl = "https://image.tmdb.org/t/p/original/${item.poster}"
+        val posterUrl = "${BuildConfig.BASE_IMAGE_URL}${item.poster}"
         Glide.with(itemView)
             .load(posterUrl)
             .centerCrop()

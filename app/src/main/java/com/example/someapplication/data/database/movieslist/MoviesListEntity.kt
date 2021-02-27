@@ -12,5 +12,6 @@ data class MoviesListEntity(
     @ColumnInfo(name = "vote_average") val ratings: Float,
     @ColumnInfo(name = "vote_count") val numberOfRatings: Int,
     @ColumnInfo(name = "genre_ids") val genres: String,
-    @ColumnInfo(name = "adult") val minimumAge: Boolean
+    @ColumnInfo(name = "adult") val minimumAge: Boolean,
+    @ColumnInfo(name = "page") val page: Int
 )
